@@ -1,7 +1,9 @@
 -- db: daytrip-- ERROR 1824 (HY000): Failed to open the referenced table '~~~' -> 先に参照されるtableを作成する必要あり
+-- float is faster but only 7 digits
+
 CREATE TABLE `mrts` (
   `id` INT AUTO_INCREMENT,
-  `name` VARCHAR(20) UNIQUE NOT NULL DEFAULT 'UNKNOWN' COMMENT 'json has null',
+  `name` VARCHAR(20) UNIQUE NOT NULL,
   PRIMARY KEY (`id`)
 );
 
@@ -37,3 +39,6 @@ CREATE TABLE `images` (
   PRIMARY KEY (`id`),
   FOREIGN KEY (`attraction_id`) REFERENCES `attractions` (`id`) ON UPDATE CASCADE ON DELETE CASCADE
 );
+
+
+
