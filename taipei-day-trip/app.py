@@ -21,39 +21,39 @@ class Attraction(BaseModel):  #pydanticの注意点：1.定義の順番、2.db�
 	images: List[str]
 
 class ResponseAttractions(BaseModel):
-	data: List[Attraction] = Field(default_factory=list)
 	nextPage: Optional[int] = Field(None, description="下一頁的編號。若沒有下一頁,則為null")
+	data: List[Attraction] = Field(default_factory=list)
 	model_config = {     #この3行は固定。
-	"json_schema_extra": {
-		"examples": [
-			{
-			"nextPage": 1,
-			"data": [
-				{"id": 10, "name": "平安鐘", "category": "公共藝術", "description": "平安鐘祈求大家的平安，這是為了紀念 921 地震週年的設計", "address": " 臺北市大安區忠孝東路 4 段 1 號", "transport": "公車：204、212、212直", "mrt": "忠孝復興", "lat": 25.04181, "lng": 121.544814, "images" :["http://140.112.3.4/images/92-0.jpg"]}
+		"json_schema_extra": {
+			"examples": [
+				{
+					"nextPage": 1,
+					"data": [
+						{"id": 10, "name": "平安鐘", "category": "公共藝術", "description": "平安鐘祈求大家的平安，這是為了紀念 921 地震週年的設計", "address": " 臺北市大安區忠孝東路 4 段 1 號", "transport": "公車：204、212、212直", "mrt": "忠孝復興", "lat": 25.04181, "lng": 121.544814, "images" :["http://140.112.3.4/images/92-0.jpg"]}
+					]
+				}
 			]
-			}
-		]
+		}
 	}
-}
 
 class ResponseAttractionId(BaseModel):   #Pydanticでは、フィールドに初期値を設定しない場合、そのフィールドは必須と見な
 	data: Attraction    #デフォルト値として空のリストを設定。各インスタンスが独自のリストを持つように。＝[]だと各自共通に
 	model_config = {     #この3行は固定。最新寫法
-	"json_schema_extra": {
-		"examples": [
-			{
-				"data":
-					{"id": 10, "name": "平安鐘", "category": "公共藝術", "description": "平安鐘祈求大家的平安，這是為了紀念 921 地震週年的設計", "address": " 臺北市大安區忠孝東路 4 段 1 號", "transport": "公車：204、212、212直", "mrt": "忠孝復興", "lat": 25.04181, "lng": 121.544814, "images" :["http://140.112.3.4/images/92-0.jpg"]}
-			}
-		]
+		"json_schema_extra": {
+			"examples": [
+				{
+					"data":
+						{"id": 10, "name": "平安鐘", "category": "公共藝術", "description": "平安鐘祈求大家的平安，這是為了紀念 921 地震週年的設計", "address": " 臺北市大安區忠孝東路 4 段 1 號", "transport": "公車：204、212、212直", "mrt": "忠孝復興", "lat": 25.04181, "lng": 121.544814, "images" :["http://140.112.3.4/images/92-0.jpg"]}
+				}
+			]
+		}
 	}
-}
 
 class ErrorResponseModel(BaseModel):
     error: bool
     message: str
     class Config:     #舊一點的寫法
-        json_schema_extra = {
+        json_schema_extra = {      #json_schema_extra可顯示字, schema_extra只能顯示dataType, 故採取前者
             "examples": [
                 {
                     "error": True,
@@ -66,14 +66,14 @@ class ErrorResponseModel(BaseModel):
 class ResponseMrts(BaseModel):
 	data: List[str]
 	model_config = {
-	"json_schema_extra": {
-		"examples": [
-			{
-				"data": ["劍潭"]
-			}
-		]
+		"json_schema_extra": {
+			"examples": [
+				{
+					"data": ["劍潭"]
+				}
+			]
+		}
 	}
-}
 
 
 # Static Pages (Never Modify Code in this Block)
