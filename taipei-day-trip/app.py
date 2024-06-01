@@ -135,7 +135,6 @@ async def get_pages(page: int = Query(..., ge=0, description="要取得的分頁
 			except Exception as e:
 				raise Exception("SQL出問題:發生地=def get_pages-2") from e
 			next_page = page + 1 if len(attractions) == size else None
-			# return {"nextPage": next_page, "data": attractions}
 			return JSONResponse(content = jsonable_encoder({"nextPage": next_page, "data": attractions}),
 				headers = {"Content-Type": "application/json; charset=utf-8"})
 #json.dumpsでエンコードした後にJSONResponseで再度エンコードすると、エスケープ文字（\）が追加される -> jsonable_encoderを使うと解決(decimal型→float型に)
@@ -174,7 +173,6 @@ async def get_attractions_info(attractionId: int = Path(description="景點編�
 			attraction["images"] = [row["url"] for row in cursor.fetchall()]
 			return JSONResponse(content = jsonable_encoder({"data": attraction}),
 					headers = {"Content-Type": "application/json; charset=utf-8"})
-			# return {"data": attraction}
 
 
 @app.get("/api/mrts", response_model = Union[ResponseMrts, ErrorResponseModel],
@@ -197,8 +195,5 @@ async def get_mrts():
 				raise Exception("SQL出問題:發生地=def get_mrts-1") from e
 			mrts = [row["name"] for row in cursor.fetchall()]
 			if not mrts:
-				raise HTTPException(status_code=500, detail={"error": True, "message": "Not Found"})  #一般的には、データが見つからない場合には404を返すのが適切
-			# json_data = json.dumps({"data":mrts}, ensure_ascii=False)  #非ASCII文字をエンコードさせない記述。
-			# return {"data": mrts}
+				raise Exception("db出問題:發生地=def get_mrts-2")
 			return JSONResponse(content={"data":mrts}, headers={"Content-Type": "application/json; charset=utf-8"})
-
