@@ -4,6 +4,7 @@ from fastapi.responses import FileResponse, RedirectResponse, JSONResponse
 from pydantic import BaseModel, Field
 from typing import List, Optional, Union  #Optional=値が指定された型または、Noneを受け入れるのに必要、List=list内の要素の型を指定するために使用
 from decimal import Decimal
+import json
 # import urllib.parse
 # from starlette.middleware.sessions import SessionMiddleware
 # app.add_middleware(SessionMiddleware, secret_key=os.getenv("SECRET_KEY"))
@@ -133,7 +134,9 @@ async def get_pages(page: int = Query(..., ge=0, description="要取得的分頁
 			except Exception as e:
 				raise Exception("SQL出問題:發生地=def get_pages-2") from e
 			next_page = page + 1 if len(attractions) == size else None
-			return {"nextPage": next_page, "data": attractions}
+			# return {"nextPage": next_page, "data": attractions}
+			return JSONResponse(content={"nextPage": next_page, "data": attractions}, headers={"Content-Type": "application/json; charset=utf-8"})
+
 #raise = 意図的に例外を発生させ、処理を中断させる。try...except内で使用すると、exceptブロックでその例外を取得可能
 #pathによる検索。
 
@@ -167,7 +170,9 @@ async def get_attractions_info(attractionId: int = Path(description="景點編�
 			except Exception as e:
 				raise Exception("SQL出問題:發生地=def get_attractions-2") from e
 			attraction["images"] = [row["url"] for row in cursor.fetchall()]
-			return {"data": attraction}
+			json_data = json.dumps({"data":attraction}, ensure_ascii=False)
+			return json_data
+			# return {"data": attraction}
 
 
 @app.get("/api/mrts", response_model = Union[ResponseMrts, ErrorResponseModel],
@@ -191,4 +196,7 @@ async def get_mrts():
 			mrts = [row["name"] for row in cursor.fetchall()]
 			if not mrts:
 				raise HTTPException(status_code=500, detail={"error": True, "message": "Not Found"})  #一般的には、データが見つからない場合には404を返すのが適切
-			return {"data": mrts}
+			json_data = json.dumps({"data":mrts}, ensure_ascii=False)  #非ASCII文字をエンコードさせない記述。
+			# return {"data": mrts}
+			return JSONResponse(content=json_data, headers={"Content-Type": "application/json; charset=utf-8"})
+
