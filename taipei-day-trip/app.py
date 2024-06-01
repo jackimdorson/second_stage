@@ -77,6 +77,12 @@ class ResponseMrts(BaseModel):
 	}
 
 
+def decimal_serializer(obj):    #jsonに変換する際に、Decimal型は変換出来ない為、pyのfloat型に変更する。db Decimal型　→　py float型
+    if isinstance(obj, Decimal):
+        return float(obj)
+    raise TypeError("Type not serializable")
+
+
 # Static Pages (Never Modify Code in this Block)
 @app.get("/", include_in_schema=False)
 async def index(request: Request):
@@ -135,12 +141,12 @@ async def get_pages(page: int = Query(..., ge=0, description="要取得的分頁
 				raise Exception("SQL出問題:發生地=def get_pages-2") from e
 			next_page = page + 1 if len(attractions) == size else None
 			# return {"nextPage": next_page, "data": attractions}
-			return JSONResponse(content={"nextPage": next_page, "data": attractions}, headers={"Content-Type": "application/json; charset=utf-8"})
-
+			return JSONResponse(content={"nextPage": next_page, "data": attractions}, default=decimal_serializer, headers={"Content-Type": "application/json; charset=utf-8"})
+#defaultパラメータは、シリアライズできないオブジェクトをどのように変換するかを指定するために使用
 #raise = 意図的に例外を発生させ、処理を中断させる。try...except内で使用すると、exceptブロックでその例外を取得可能
 #pathによる検索。
 
-@app.get("/api/attractions/{attractionId}", response_model = Union[ResponseAttractionId, ErrorResponseModel],
+@app.get("/api/attraction/{attractionId}", response_model = Union[ResponseAttractionId, ErrorResponseModel],
 		responses = {
 			200: {"model": ResponseAttractionId, "description": "景點資料"},
 			400: {"model": ErrorResponseModel, "description": "景點編號不正確"},
@@ -170,8 +176,7 @@ async def get_attractions_info(attractionId: int = Path(description="景點編�
 			except Exception as e:
 				raise Exception("SQL出問題:發生地=def get_attractions-2") from e
 			attraction["images"] = [row["url"] for row in cursor.fetchall()]
-			json_data = json.dumps({"data":attraction}, ensure_ascii=False)
-			return json_data
+			return JSONResponse(content={"data":attraction}, default=decimal_serializer, headers={"Content-Type": "application/json; charset=utf-8"})
 			# return {"data": attraction}
 
 
@@ -196,7 +201,7 @@ async def get_mrts():
 			mrts = [row["name"] for row in cursor.fetchall()]
 			if not mrts:
 				raise HTTPException(status_code=500, detail={"error": True, "message": "Not Found"})  #一般的には、データが見つからない場合には404を返すのが適切
-			json_data = json.dumps({"data":mrts}, ensure_ascii=False)  #非ASCII文字をエンコードさせない記述。
+			# json_data = json.dumps({"data":mrts}, ensure_ascii=False)  #非ASCII文字をエンコードさせない記述。
 			# return {"data": mrts}
-			return JSONResponse(content=json_data, headers={"Content-Type": "application/json; charset=utf-8"})
+			return JSONResponse(content={"data":mrts}, headers={"Content-Type": "application/json; charset=utf-8"})
 
