@@ -1,10 +1,10 @@
 from common import app, logger, LoggerCritical, connect_db
 from fastapi import Request, HTTPException, Query, Path
+from fastapi.encoders import jsonable_encoder  #jsonResponseの際、decimal型不支援の為、 → float型に変更する際に必要
 from fastapi.responses import FileResponse, RedirectResponse, JSONResponse
 from pydantic import BaseModel, Field
 from typing import List, Optional, Union  #Optional=値が指定された型または、Noneを受け入れるのに必要、List=list内の要素の型を指定するために使用
 from decimal import Decimal
-import json
 # import urllib.parse
 # from starlette.middleware.sessions import SessionMiddleware
 # app.add_middleware(SessionMiddleware, secret_key=os.getenv("SECRET_KEY"))
@@ -77,11 +77,6 @@ class ResponseMrts(BaseModel):
 	}
 
 
-def decimal_serializer(obj):    #jsonに変換する際に、Decimal型は変換出来ない為、pyのfloat型に変更する。db Decimal型　→　py float型
-    if isinstance(obj, Decimal):
-        return float(obj)
-    raise TypeError("Type not serializable")
-
 
 # Static Pages (Never Modify Code in this Block)
 @app.get("/", include_in_schema=False)
@@ -141,8 +136,9 @@ async def get_pages(page: int = Query(..., ge=0, description="要取得的分頁
 				raise Exception("SQL出問題:發生地=def get_pages-2") from e
 			next_page = page + 1 if len(attractions) == size else None
 			# return {"nextPage": next_page, "data": attractions}
-			return JSONResponse(content={"nextPage": next_page, "data": attractions}, default=decimal_serializer, headers={"Content-Type": "application/json; charset=utf-8"})
-#defaultパラメータは、シリアライズできないオブジェクトをどのように変換するかを指定するために使用
+			return JSONResponse(content = jsonable_encoder({"nextPage": next_page, "data": attractions}),
+				headers = {"Content-Type": "application/json; charset=utf-8"})
+#json.dumpsでエンコードした後にJSONResponseで再度エンコードすると、エスケープ文字（\）が追加される -> jsonable_encoderを使うと解決(decimal型→float型に)
 #raise = 意図的に例外を発生させ、処理を中断させる。try...except内で使用すると、exceptブロックでその例外を取得可能
 #pathによる検索。
 
@@ -176,7 +172,8 @@ async def get_attractions_info(attractionId: int = Path(description="景點編�
 			except Exception as e:
 				raise Exception("SQL出問題:發生地=def get_attractions-2") from e
 			attraction["images"] = [row["url"] for row in cursor.fetchall()]
-			return JSONResponse(content={"data":attraction}, default=decimal_serializer, headers={"Content-Type": "application/json; charset=utf-8"})
+			return JSONResponse(content = jsonable_encoder({"data": attraction}),
+					headers = {"Content-Type": "application/json; charset=utf-8"})
 			# return {"data": attraction}
 
 
