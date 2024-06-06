@@ -1,0 +1,161 @@
+@font-face {
+  font-family: "Noto Sans TC";
+  src: url("../fonts/NotoSansTC-Bold.woff") format("woff"), url("../fonts/NotoSansTC-Medium.woff") format("woff"), url("../fonts/NotoSansTC-Regular.woff") format("woff");
+  display: swap;
+}
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  line-height: 1;
+  font-size: 20px;
+  font-family: "Noto Sans TC", "sans-serif";
+}
+
+img {
+  -o-object-fit: cover;
+     object-fit: cover;
+}
+
+a {
+  text-decoration: none;
+  color: unset;
+}
+
+[data-theme=dark] {
+  background-color: black;
+  color: white;
+}
+
+.header {
+  padding-left: 10px;
+  width: 100%;
+  height: 54px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.header__title > a {
+  color: #448899;
+}
+.header__nav {
+  padding-right: 10px;
+}
+
+.hero {
+  width: 100%;
+  height: 320px;
+  padding-left: 10px;
+  color: white;
+  background-image: url("/static/images/bg/bg-hero-mobile.png");
+  display: flex;
+  align-items: center;
+}
+.hero__content {
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+  line-height: 50px;
+}
+.hero__content__title {
+  font-size: 28px;
+}
+.hero__content__text {
+  font-size: 16px;
+}
+
+.search-box__label {
+  display: inline-block;
+  width: 285px;
+  height: 46px;
+  border-radius: 5px;
+  background-color: #448899;
+  display: flex;
+  align-items: center;
+}
+.search-box__input {
+  width: 225px;
+  height: 46px;
+  box-sizing: border-box;
+  padding-left: 10px;
+}
+.search-box__icon {
+  width: 30px;
+  height: 30px;
+  margin: 0 auto;
+}
+
+.tabs {
+  width: 100%;
+}
+.tabs__items {
+  width: calc(100% - 30px);
+  height: 280px;
+  margin: 15px;
+  position: relative;
+  border: 1px solid #666666;
+  border-radius: 5px;
+}
+.tabs__items > img {
+  width: 100%;
+  height: 235px;
+}
+.tabs__name {
+  position: absolute;
+  bottom: 45px;
+  background-color: rgba(0, 0, 0, 0.4);
+  color: white;
+  width: calc(100% - 10px);
+  padding: 10px 0 10px 10px;
+}
+.tabs__info {
+  width: calc(100% - 10px);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 45px;
+  padding-left: 10px;
+}
+
+.footer {
+  margin-top: auto;
+  height: 50px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: black;
+  color: white;
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.main {
+  min-height: 100vh;
+}
+
+@media (min-width: 500px) {
+  .hero {
+    background-image: url("/static/images/bg/bg-hero-desktop.png");
+    background-size: cover;
+  }
+}
+@media (min-width: 1200px) {
+  .header {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  .tabs {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-gap: 15px;
+  }
+}/*# sourceMappingURL=styles.css.map */

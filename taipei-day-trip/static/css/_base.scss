@@ -1,0 +1,60 @@
+$black: black;
+$white: white;
+$cyan448: #448899;  // main
+$cyan: #66AABB;
+$cyan: #AADDEE;
+$gray666: #666666;  // main
+$gray757: #757575;  // footer
+$grayE8E: #E8E8E8;
+$grayF8F: #F8F8F8;
+
+@font-face {     //font読み込みの記述
+    font-family: "Noto Sans TC";
+    src:
+        url("../fonts/NotoSansTC-Bold.woff") format("woff"),
+        url("../fonts/NotoSansTC-Medium.woff") format("woff"),
+        url("../fonts/NotoSansTC-Regular.woff") format("woff");
+    display: swap;
+}
+
+@mixin flex-vertical-center {
+    display: flex;
+    align-items: center;
+}
+
+@mixin max-width-center{
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+// original css_reset
+*, *::before, *::after {
+    margin: 0;
+    padding: 0;
+}
+
+
+html {
+    line-height: 1.0;
+    font-size: 20px;
+    font-family: "Noto Sans TC", "sans-serif";
+}
+
+
+img {
+    object-fit: cover;
+}
+
+
+a {
+    text-decoration: none;
+    color: unset;
+}
+
+
+[data-theme="dark"]{
+    background-color: $black;
+    color: $white;
+}
+
+
