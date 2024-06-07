@@ -4,50 +4,73 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>台北一日遊</title>
-  <!-- <link rel="preconnect" href="https://fonts.googleapis.com">
+  <!-- hero -->
+  <link rel="preload" href="/static/images/bg/bg-hero-mobile.webp" as="image" media="(max-width: 499px)"/>
+  <link rel="preload" href="/static/images/bg/bg-hero-desktop.webp" as="image" media="(min-width: 500px)"/>
+  <!-- preloadはリソースの取得を優先させるためのものであり、実際にスタイルを適用するわけではない -->
+  <link rel="preload" href="static/css/firstview.css" as="style">
+  <link rel="stylesheet" href="static/css/firstview.css">
+  <script defer src="static/js/index.js"></script>    <!-- #staticが基準 -->
+  <!-- googlefont -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet"> -->
-  <link rel="stylesheet" href="static/css/styles.css">
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" as="style">
+
 </head>
-<body class="body">
+<body>
   <header class="header">
-      <h2 class="header__title"><a href="#">台北一日遊</a></h2>
+      <h2 class="header__title"><a href="/">台北一日遊</a></h2>
       <nav class="header__nav">
         <a href="#">預定行程</a>
         <a href="#">登入/註冊</a>
       </nav>
   </header>
-  <main class="main">
-    <div class="hero">
-      <!-- <picture class="hero__img">
-        <source media="(min-width: 500px)" srcset="static/images/bg/bg-hero-desktop.png">
-        <img src="static/images/bg/bg-hero-mobile.png" alt="Taipei101">
-      </picture> -->
+  <main>
+    <section class="hero">     <!-- 独立する為section化可能 -->
       <div class="hero__content">
         <h1 class="hero__content__title">輕鬆享受台北一日悠閒</h1>
-        <p class="hero__content__text">探索每個角落, 體驗城市的深度旅遊行程</p>
+        <p class="hero__content__text">探索每個角落，體驗城市的深度旅遊行程</p>
         <div class="search-box">
           <label class="search-box__label">
             <input type="text" class="search-box__input" placeholder="輸入景點名稱查詢">
-            <img class="search-box__icon" src="static/images/icons/icon-search.png" alt="icon-search">
+            <img class="search-box__icon" loading="lazy" src="static/images/icons/icon-search.webp" alt="icon-search">
           </label>
         </div>
       </div>
-    </div>
-    <div class="carousel">
-      <img class="carousel__button carousel__button--left" src="static/images/icons/icon-left-arrow.png" alt="left-arrow">
-      <div class="carousel__track-containeer">
-        <ul class="carousel__track">
-        </ul>
+    </section>
+    <section class="carousel">     <!-- 独立する為section化可能 -->
+      <img class="carousel__button carousel__button--left"  loading="lazy" src="static/images/icons/icon-left-arrow.webp" alt="left-arrow">
+      <div class="carousel__track-container">
+        <div class="carousel__track">
+        </div>
       </div>
-      <img class="carousel__button carousel__button--right" src="static/images/icons/icon-right-arrow.png" alt="right-arrow">
-    </div>
-    <div class="tabs">
-    </div>
+      <img class="carousel__button carousel__button--right"  loading="lazy" src="static/images/icons/icon-right-arrow.webp" alt="right-arrow">
+    </section>
+    <section class="tabs">     <!-- 独立する為section化可能 -->
+    </section>
   </main>
   <footer class="footer">
     <p>COPYRIGHT © 2021 台北一日遊</p>
   </footer>
-  <script defer src="static/js/index.js"></script>    <!-- #staticが基準 -->
+  <link rel="stylesheet" href="static/css/styles.css">   <!-- rel="stylesheet"は、ページのレンダリングをblock, 複数のcssは並行して読み込まれる -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap">
+  <!-- <script>
+    const link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = 'https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap';
+    document.head.appendChild(link);
+  </script> -->
 </body>
 </html>
+
+
+<!-- scriptのデフォルトは、同期的=読み込みと完了まで、htmlの解析は一時停止
+defer = 非blocking, HTMLの解析を続けながら、スクリプトをbgでdownloadし -> htmlの解析完了したら実行
+link tag = blocking, CSSファイルはレンダリングをブロック
+
+ページのレンダリング=HTMLやCSS、Jsなどを解析し、画面に表示するプロセス
+1.HTMLの解析 (Parsing) = DOMツリーの構築。
+2.CSSの解析 (CSS Parsing)、CSSOMツリーの構築（CSS Object Model） CSSファイルがレンダリングをブロック
+    <head>タグ内に配置されたCSSは、ページのレンダリングをブロックする。初期表示に必要なcssはここ。
+    <body>タグの後に配置されたCSSは、ページのレンダリングをブロックしない。初期表示に不要なcssはここ。
+3.DOMツリーとCSSOMツリーの結合 (Render Tree Construction) -->

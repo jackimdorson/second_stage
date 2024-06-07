@@ -1,0 +1,135 @@
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  line-height: 1;
+  font-size: 20px;
+  font-family: "Noto Sans TC", "sans-serif";
+}
+html body {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+html body main {
+  min-height: 100vh;
+}
+html body img {
+  -o-object-fit: cover;
+     object-fit: cover;
+}
+html body a {
+  text-decoration: none;
+  color: unset;
+}
+
+.header {
+  padding-left: 10px;
+  width: 100%;
+  height: 54px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.header__title > a {
+  color: #448899;
+}
+.header__nav {
+  padding-right: 10px;
+}
+
+.hero {
+  width: 100%;
+  height: 320px;
+  padding-left: 10px;
+  color: white;
+  background-image: url("/static/images/bg/bg-hero-mobile.webp");
+  background-size: cover;
+  display: flex;
+  align-items: center;
+}
+.hero__content {
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+  line-height: 50px;
+}
+.hero__content__title {
+  font-size: 28px;
+}
+.hero__content__text {
+  font-size: 16px;
+}
+
+.tabs {
+  width: 100%;
+}
+.tabs__item {
+  width: calc(100% - 30px);
+  height: 280px;
+  margin: 15px;
+  position: relative;
+  border: 1px solid #666666;
+  border-radius: 5px;
+}
+.tabs__item > img {
+  width: 100%;
+  height: 235px;
+}
+.tabs__name {
+  position: absolute;
+  bottom: 45px;
+  background-color: rgba(0, 0, 0, 0.4);
+  color: white;
+  width: calc(100% - 10px);
+  padding: 10px 0 10px 10px;
+}
+.tabs__info {
+  width: calc(100% - 10px);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 45px;
+  padding-left: 10px;
+}
+
+.carousel {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+}
+.carousel__track-container {
+  overflow: hidden;
+}
+.carousel__track {
+  display: flex;
+}
+.carousel__item {
+  min-width: -moz-fit-content;
+  min-width: fit-content;
+  padding: 5px 15px;
+  text-align: center;
+}
+
+@media (min-width: 500px) {
+  .hero {
+    background-image: url("/static/images/bg/bg-hero-desktop.webp");
+    background-size: cover;
+  }
+}
+@media (min-width: 1200px) {
+  .header {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  .tabs {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-gap: 15px;
+  }
+}/*# sourceMappingURL=firstview.css.map */

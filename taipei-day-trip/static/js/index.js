@@ -1,13 +1,19 @@
 "use strict"
 
+// document.addEventListener("DOMContentLoaded", function() {
+//     const link = document.createElement("link");
+//     link.href = "https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap";
+//     link.rel = "stylesheet";
+//     document.head.appendChild(link);
+//   });
+
+
 const tabsQryS = document.querySelector(".tabs")
 const clickAttrQryS = document.querySelector(".search-box__icon");
 const inputAttrQryS = document.querySelector(".search-box__input");
 
 
 async function fetchAttractions(pageArg, keywordArg = null){
-    console.log(pageArg);
-    console.log("--2--")
     let url = `/api/attractions?page=${encodeURIComponent(pageArg)}`;
     if (keywordArg) {
         url += `&keyword=${encodeURIComponent(keywordArg)}`;
@@ -55,11 +61,12 @@ function createElmAndClass(elm, className) {
 
 
 function createParentsElmDiv(attraction) {
-    const parentElmDiv = createElmAndClass("div", "tabs__items");
+    const parentElmDiv = createElmAndClass("article", "tabs__item");
 
     const childElmImg = createElmAndClass("img", "tabs__img");
     childElmImg.src = attraction.images[0];
     childElmImg.alt = attraction.name;
+    childElmImg.loading = "lazy";
     parentElmDiv.appendChild(childElmImg);   //appendChildの頻度の多くないところでは、影響が少ない為fragment経由でなくても良い
 
     const childElmDivName = createElmAndClass("div", "tabs__name");
@@ -122,6 +129,61 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const response = await fetch("/api/mrts");
     const jsonData = await response.json();
-    const stations = data.data;
+    const stationsList = jsonData.data;
+    const fragment = document.createDocumentFragment();
 
+    for (const stationList of stationsList) {
+        const div = document.createElement("div");
+        div.classList.add("carousel__item");
+        div.textContent = stationList;
+        fragment.appendChild(div);
+    }
+    carouselTrack.appendChild(fragment);
+
+
+    const getScrollAmount = () => {
+        if (window.innerWidth >= 1200) {
+            return 10;
+        } else if (window.innerWidth <= 500) {
+            return 2;
+        } else {
+            return 4;
+        }
+    }
+
+
+    let currentIndex = 0;    // 現在表示されているカルーセルアイテムのインデックスを保持
+    const updateCarousel = () => {   //カルーセルの位置を更新するための関数
+        const width = carouselTrack.children[0].getBoundingClientRect().width;  //カルーセルアイテムの幅を取得(各アイテムは同じ幅で設計されることがほとんど).getBoundingClientRect()は要素のサイズと位置を含むDOMRectオブジェクトを返す
+        carouselTrack.style.transform = `translateX(-${currentIndex * width}px)`;  //カルーセルの位置の更新
+    }
+    leftButton.addEventListener("click", () => {
+        const scrollAmount = getScrollAmount();
+        if (currentIndex > 0) {
+            currentIndex = Math.max(0, currentIndex - scrollAmount);
+            updateCarousel();
+        }
+    })
+    rightButton.addEventListener("click", () => {
+        const scrollAmount = getScrollAmount();
+        if (currentIndex < stationsList.length - scrollAmount - 3) {   //3は最後の微調整
+            currentIndex = Math.min(stationsList.length - scrollAmount, currentIndex + scrollAmount);
+            updateCarousel();
+        }
+    })
+    carouselTrack.addEventListener("click", async(event) => {
+        if (event.target.classList.contains("carousel__item")) {
+            keyword = event.target.textContent;
+            inputAttrQryS.value = keyword;
+            page = 0;
+            tabsQryS.textContent = "";
+            page = await loadMoreItems(page, keyword);
+        }
+    })
 })
+
+// addEventListenerには2つの方法がある。// 要素が1〜3つしかない場合: => 子要素に対して使う。
+//要素が複数あり、for文などを必要とする場合: => 親要素に対して使い、eventで小要素を操作。
+// 以下の方法では、各イベントリスナーが個別に処理されるため、イベントが発生するたびに30個のリスナーがチェックされる。
+// const clickMrtsQrySA = document.querySelectorAll(".carousel__item");
+// for (const clickMrtQryS of clickMrtsQrySA){

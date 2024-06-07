@@ -1,0 +1,145 @@
+// Googleの推奨する項目「firstViewで利用しているCSS」,それ以外は遅延読み込み
+// CSSはレンダーblockingリソースです。ブラウザはCSSを完全にダウンロードし、解析してからページのレンダリングを開始
+@use "_base.scss" as *;
+
+// original css_reset
+*, *::before, *::after {
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    line-height: 1.0;
+    font-size: 20px;
+    font-family: "Noto Sans TC", "sans-serif";
+
+    & body {            //コンテンツが少ない時でもfooterを一番下に置くための記述(flexの方法)
+        display:flex;
+        flex-direction: column;
+        height: 100%;
+
+        & main {            //footerをスクロールした際に表示させる方法
+            min-height: 100vh;
+        }
+        & img {
+            object-fit: cover;
+        }
+        & a {
+            text-decoration: none;
+            color: unset;
+        }
+    }
+}
+
+
+.header {
+    padding-left: 10px;
+    width: 100%;
+    height: 54px;
+
+    @include flex-vertical-center();
+    justify-content: space-between;
+
+    &__title > a {
+        color: $cyan448;
+    }
+    &__nav {
+        padding-right: 10px;
+    }
+}
+
+.hero {
+    width: 100%;
+    height: 320px;
+    padding-left: 10px;
+    color: $white;
+    background-image: url("/static/images/bg/bg-hero-mobile.webp");    //png対比25%程容量が小さく透明性もok
+    background-size: cover;
+    @include flex-vertical-center();
+
+    &__content {
+        @include max-width-center();
+        width: 100%;
+        line-height: 50px;
+
+        &__title {
+            font-size: 28px;
+        }
+        &__text {
+            font-size: 16px;
+        }
+    }
+}
+
+.tabs {
+    width: 100%;
+    &__item {
+        width: calc(100% - 30px);
+        height: 280px;
+        margin: 15px;
+        position: relative;
+        border: 1px solid $gray666;
+        border-radius: 5px;
+    }
+    &__item > img {
+        width: 100%;
+        height: 235px;
+    }
+    &__name {
+        position: absolute;
+        bottom: 45px;
+        background-color: rgba(0, 0, 0, 0.4);
+        color: white;
+        width: calc(100% - 10px);
+        padding: 10px 0 10px 10px;
+    }
+    &__info {
+        width: calc(100% - 10px);
+        @include flex-vertical-center();
+        justify-content: space-between;
+        height: 45px;
+        padding-left: 10px;
+    }
+}
+
+
+.carousel {
+    max-width: 1200px;
+    margin: 0 auto;
+    @include flex-vertical-center();
+
+    &__track-container {
+        overflow: hidden;
+    }
+    &__track {
+        display: flex;
+    }
+    &__item {
+        min-width: fit-content;
+        padding: 5px 15px;
+        text-align: center;
+    }
+}
+
+
+
+@media (min-width: 500px) {
+    .hero {
+        background-image: url("/static/images/bg/bg-hero-desktop.webp");
+        background-size: cover;
+    }
+}
+
+
+@media (min-width: 1200px) {
+    .header {
+        @include max-width-center();
+    }
+    .tabs {
+        @include max-width-center();
+        display: grid;
+
+        grid-template-columns: repeat(4, 1fr);
+        grid-gap: 15px;
+    }
+}
