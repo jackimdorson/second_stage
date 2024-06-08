@@ -15,23 +15,25 @@
 }
 
 .search-box {
+    width: 285px;
+    height: 46px;
+    border-radius: 5px;
+    background-color: $cyan448;
+
     &__label {
-        display: inline-block;
-        width: 285px;
-        height: 46px;
-        border-radius: 5px;
-        background-color: $cyan448;
         @include flex-vertical-center();
     }
     &__input {
         width: 225px;
-        height: 46px;
         box-sizing: border-box;
-        padding-left: 10px;
+        padding: 15px;
+        border-radius: 5px 0 0 5px;
+
+        &::placeholder {
+            color: $gray757;
+        }
     }
     &__icon {
-        width: 30px;
-        height: 30px;
         margin: 0 auto;
     }
 }
@@ -39,18 +41,29 @@
 
 .footer {
     margin-top: auto;
-    height: 50px;
+    height: 104px;
     width: 100%;
     @include flex-vertical-center;
     justify-content: center;
-    background-color: black;
+    background-color: $gray757;
     color: white;
 }
 
+.container {
+    padding: 40px 0;   //指定值
+}
 
 .carousel {
-    &__button, &__item {
-        cursor: pointer;
+    cursor: pointer;
+    &__button {
+        opacity: 0.5;
+
+        &:hover {
+            opacity: 1;
+        }
+    }
+    &__item:hover {
+        color: $black;
     }
     &__track {
         transition: transform 0.3s ease-in-out;

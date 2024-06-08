@@ -1,49 +1,58 @@
-*, *::before, *::after {
+body {
   margin: 0;
-  padding: 0;
 }
-
-html {
-  line-height: 1;
-  font-size: 20px;
-  font-family: "Noto Sans TC", "sans-serif";
+body ul {
+  list-style: none;
+  padding-inline-start: unset;
 }
-html body {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-}
-html body main {
-  min-height: 100vh;
-}
-html body img {
-  -o-object-fit: cover;
-     object-fit: cover;
-}
-html body a {
+body a {
   text-decoration: none;
   color: unset;
 }
+body p, body ul, body h1, body h2, body h3, body h4, body h5 {
+  margin-block-start: unset;
+  margin-block-end: unset;
+}
+body input {
+  border: unset;
+}
+
+body {
+  font-family: "Noto Sans TC";
+  display: flex;
+  flex-direction: column;
+}
+body main {
+  min-height: 100vh;
+}
+body img {
+  -o-object-fit: cover;
+     object-fit: cover;
+}
 
 .header {
-  padding-left: 10px;
-  width: 100%;
-  height: 54px;
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
-.header__title > a {
+.header a {
+  display: flex;
+  align-items: center;
+  height: 34px;
+  margin: 10px;
+}
+.header__title {
   color: #448899;
+  font-size: 30px;
 }
 .header__nav {
-  padding-right: 10px;
+  display: flex;
+  align-items: center;
+  color: #666666;
 }
 
 .hero {
-  width: 100%;
   height: 320px;
-  padding-left: 10px;
   color: white;
   background-image: url("/static/images/bg/bg-hero-mobile.webp");
   background-size: cover;
@@ -51,10 +60,12 @@ html body a {
   align-items: center;
 }
 .hero__content {
-  max-width: 1200px;
-  margin: 0 auto;
+  padding: 0 20px;
   width: 100%;
-  line-height: 50px;
+  color: #F8F8F8;
+  display: grid;
+  gap: 20px;
+  box-sizing: border-box;
 }
 .hero__content__title {
   font-size: 28px;
@@ -64,45 +75,65 @@ html body a {
 }
 
 .tabs {
-  width: 100%;
+  display: grid;
+  gap: 30px;
+  padding: 15px;
+  box-sizing: border-box;
 }
 .tabs__item {
-  width: calc(100% - 30px);
   height: 280px;
-  margin: 15px;
   position: relative;
-  border: 1px solid #666666;
+  border: 1px solid #E8E8E8;
   border-radius: 5px;
 }
-.tabs__item > img {
+.tabs__item:hover {
+  opacity: 0.9;
+}
+.tabs__img {
   width: 100%;
-  height: 235px;
+  height: calc(100% - 45px);
+  border-radius: 5px 5px 0 0;
 }
 .tabs__name {
   position: absolute;
   bottom: 45px;
-  background-color: rgba(0, 0, 0, 0.4);
+  height: 40px;
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
   color: white;
-  width: calc(100% - 10px);
-  padding: 10px 0 10px 10px;
+  padding: 10px;
+  box-sizing: border-box;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 20px;
 }
 .tabs__info {
-  width: calc(100% - 10px);
+  position: absolute;
+  bottom: 0;
+  height: 45px;
+  width: 100%;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 45px;
-  padding-left: 10px;
+  color: #757575;
+  padding: 10px;
+  box-sizing: border-box;
 }
 
 .carousel {
-  max-width: 1200px;
-  margin: 0 auto;
+  padding: 0 15px 20px;
+  box-sizing: border-box;
   display: flex;
   align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  color: #666666;
 }
 .carousel__track-container {
   overflow: hidden;
+  margin: 13px 10px;
+  width: 100%;
 }
 .carousel__track {
   display: flex;
@@ -110,7 +141,7 @@ html body a {
 .carousel__item {
   min-width: -moz-fit-content;
   min-width: fit-content;
-  padding: 5px 15px;
+  padding: 0 15px;
   text-align: center;
 }
 
@@ -119,17 +150,38 @@ html body a {
     background-image: url("/static/images/bg/bg-hero-desktop.webp");
     background-size: cover;
   }
+  .hero__content {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  .search-box {
+    max-width: 460px;
+  }
+  .tabs {
+    max-width: 1200px;
+    margin: 0 auto;
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (min-width: 700px) {
+  .tabs {
+    max-width: 1200px;
+    margin: 0 auto;
+    gap: 18px;
+    grid-template-columns: repeat(3, 1fr);
+  }
 }
 @media (min-width: 1200px) {
   .header {
-    max-width: 1200px;
+    width: 1200px;
     margin: 0 auto;
   }
   .tabs {
     max-width: 1200px;
     margin: 0 auto;
-    display: grid;
     grid-template-columns: repeat(4, 1fr);
-    grid-gap: 15px;
   }
-}/*# sourceMappingURL=firstview.css.map */
+  .tabs__item {
+    height: 270px;
+  }
+}/*# sourceMappingURL=firstView.css.map */
