@@ -7,39 +7,31 @@ const carouselTrack = document.querySelector('.carousel__track');
 const leftButton = document.querySelector('.carousel__button--left');
 const rightButton = document.querySelector('.carousel__button--right');
 
-let currentController = null;  // AbortControllerで必要: 初期状態ではコントローラが存在しないことを示す //各リクエストに対して個別に宣言する必要あり。
-
-async function fetchWithAbort(url, controller) {   //controllerはcurrentControllerを受けるための単なる引数
+async function fetchWithAbort(url) {   //controllerはcurrentControllerを受けるための単なる引数
+    const controller = new AbortController();
     const response = await fetch(url, { signal: controller.signal }); //fetchリクエストにAbortSignalを渡す事でAbortControllerを使用してリクエストを中断が可能に
     if (!response.ok) {
         throw new Error(`HTTP Error status:${response.status}`);
     }
-    return response.json();
+    const jsonData = await response.json();
+    controller.abort(); // リクエスト完了したら、そのAbortControllerインスタンスを破棄
+    return jsonData;
 }
 
-async function fetchAttractions(pageArg, keywordArg, controller){
+async function fetchAttractions(pageArg, keywordArg){
     let url = `/api/attractions?page=${encodeURIComponent(pageArg)}`;
     if (keywordArg) {
         url += `&keyword=${encodeURIComponent(keywordArg)}`;
     }
-    return fetchWithAbort(url, controller);
+    return fetchWithAbort(url);
 }
 
-// async function fetchMrtStations(controller) {
-//     const url = "/api/mrts";
-//     return fetchWithAbort(url, controller);
-// }
 
 let page = 0;
 let keyword = null;
 async function loadMoreItems(pageArg, keywordArg) {   //非同期関数のreturnはawaitで処理しても常にPromiseを返す
-    if (currentController) {    //trueでないと実行されない事に注意, nullでは挙動しない
-        currentController.abort();   //新しいリクエストが発生するたび、前のリクエストをキャンセルするためにcurrentController.abort()を呼び出す
-    }
-    currentController = new AbortController();   //新しいAbortControllerを作成
-
     try {
-        const jsonData = await fetchAttractions(pageArg, keywordArg, currentController);       // fetch().dataとする事はできない。
+        const jsonData = await fetchAttractions(pageArg, keywordArg);       // fetch().dataとする事はできない。
         if (!jsonData.data) {
             tabsQryS.textContent = jsonData.message;
             throw new Error("無資料");
