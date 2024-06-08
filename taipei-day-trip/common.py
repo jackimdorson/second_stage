@@ -63,44 +63,42 @@ async def global_exception_handler(request: Request, exc: Exception):
     )
 
 
+#  Connection Poolの設定　dbconfigは、データベース接続の設定を含む辞書
+dbconfig = {
+    "host": os.getenv("DB_HOST"),
+    "user": os.getenv("DB_USER"),
+    "password": os.getenv("DB_PASSWORD"),
+    "database": os.getenv("DB_NAME")
+}
+
+try:
+    connection_pool = pooling.MySQLConnectionPool(
+        pool_name="mypool",
+        pool_size=10,  # プールの最小接続数
+        pool_reset_session=True, #接続がプールに返却されるたびにセッションがリセットされ、次の利用時にクリーンな状態で使用可能に
+        **dbconfig
+    )
+    logger.debug("成功connection_pool")
+except Error as e:
+    raise LoggerCritical(f"失敗connection_pool{e}")
+
 
 def connect_db():  #データベース接続オブジェクトはwith文が使える
-    conn = mysql.connector.connect(
-            host = os.getenv("DB_HOST"),
-            user = os.getenv("DB_USER"),
-            password = os.getenv("DB_PASSWORD"),
-            database = os.getenv("DB_NAME")
-        )
-    if conn.is_connected():
-        logger.debug("成功connect_db")
-        return conn
-    raise LoggerCritical("失敗connect_db")
+    connection = connection_pool.get_connection()
+    return connection
 
 
 
 
 
-
-
-
-
- # Connection Poolの設定　dbconfigは、データベース接続の設定を含む辞書
-# dbconfig = {
-#     "host": os.getenv("DB_HOST"),
-#     "user": os.getenv("DB_USER"),
-#     "password": os.getenv("DB_PASSWORD"),
-#     "database": os.getenv("DB_NAME")
-# }
-
-# try:
-#     connection_pool = pooling.MySQLConnectionPool(
-#         pool_name="mypool",
-#         pool_size=10,  # プールの最小接続数
-#         pool_reset_session=True, #接続がプールに返却されるたびにセッションがリセットされ、次の利用時にクリーンな状態で使用可能に
-#         **dbconfig
-#     )
-#     logger.debug("成功connection_pool")
-# except Error as e:
-#     raise LoggerCritical(f"失敗connection_pool{e}")
-#     logger.critical(f"接続プールの作成に失敗: {e}")
-#     raise
+# def connect_db():  #データベース接続オブジェクトはwith文が使える
+#     conn = mysql.connector.connect(
+#             host = os.getenv("DB_HOST"),
+#             user = os.getenv("DB_USER"),
+#             password = os.getenv("DB_PASSWORD"),
+#             database = os.getenv("DB_NAME")
+#         )
+#     if conn.is_connected():
+#         logger.debug("成功connect_db")
+#         return conn
+#     raise LoggerCritical("失敗connect_db")

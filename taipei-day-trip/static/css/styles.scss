@@ -16,7 +16,6 @@
 
 .search-box {
     width: 285px;
-    height: 46px;
     border-radius: 5px;
     background-color: $cyan448;
 
@@ -25,6 +24,7 @@
     }
     &__input {
         width: 225px;
+        height: 46px;
         box-sizing: border-box;
         padding: 15px;
         border-radius: 5px 0 0 5px;
@@ -68,13 +68,4 @@
     &__track {
         transition: transform 0.3s ease-in-out;
     }
-}
-
-
-@media (min-width: 500px) {
-
-}
-
-@media (min-width: 1200px) {
-
 }

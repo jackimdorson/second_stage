@@ -61,7 +61,8 @@ body {     //コンテンツが少ない時でもfooterを一番下に置くた�
     height: 320px;
     color: $white;
     background-image: url("/static/images/bg/bg-hero-mobile.webp");    //png対比25%程容量が小さく透明性もok
-    background-size: cover;
+    background-size: cover;      //画像を中央にする為に必要
+    background-position: center;      //画像を中央にする為に必要
     @include flex-vertical-center();
 
     &__content {
@@ -173,6 +174,7 @@ body {     //コンテンツが少ない時でもfooterを一番下に置くた�
     }
 }
 
+
 @media (min-width: 700px) {     //for常常pc視窗並排的User, 像自己非常需要
     .tabs {
         @include max-width-center();
@@ -189,7 +191,7 @@ body {     //コンテンツが少ない時でもfooterを一番下に置くた�
     }
     .tabs {
         @include max-width-center();
-        grid-template-columns: repeat(4, 1fr);
+        grid-template-columns: repeat(4, 1fr);   //grid, 不像flex無法至中
 
         &__item {
             height: 270px;
