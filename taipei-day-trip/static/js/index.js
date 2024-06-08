@@ -7,8 +7,7 @@ const carouselTrack = document.querySelector('.carousel__track');
 const leftButton = document.querySelector('.carousel__button--left');
 const rightButton = document.querySelector('.carousel__button--right');
 
-let currentController = null;  // AbortControllerで必要: 初期状態ではコントローラが存在しないことを示す
-let mrtController = null;  //各リクエストに対して個別に宣言する必要あり。
+let currentController = null;  // AbortControllerで必要: 初期状態ではコントローラが存在しないことを示す //各リクエストに対して個別に宣言する必要あり。
 
 async function fetchWithAbort(url, controller) {   //controllerはcurrentControllerを受けるための単なる引数
     const response = await fetch(url, { signal: controller.signal }); //fetchリクエストにAbortSignalを渡す事でAbortControllerを使用してリクエストを中断が可能に
@@ -26,11 +25,10 @@ async function fetchAttractions(pageArg, keywordArg, controller){
     return fetchWithAbort(url, controller);
 }
 
-async function fetchMrtStations(controller) {
-    const url = "/api/mrts";
-    return fetchWithAbort(url, controller);
-}
-
+// async function fetchMrtStations(controller) {
+//     const url = "/api/mrts";
+//     return fetchWithAbort(url, controller);
+// }
 
 let page = 0;
 let keyword = null;
@@ -39,6 +37,7 @@ async function loadMoreItems(pageArg, keywordArg) {   //非同期関数のreturn
         currentController.abort();   //新しいリクエストが発生するたび、前のリクエストをキャンセルするためにcurrentController.abort()を呼び出す
     }
     currentController = new AbortController();   //新しいAbortControllerを作成
+
     try {
         const jsonData = await fetchAttractions(pageArg, keywordArg, currentController);       // fetch().dataとする事はできない。
         if (!jsonData.data) {
@@ -56,9 +55,9 @@ async function loadMoreItems(pageArg, keywordArg) {   //非同期関数のreturn
         return jsonData.nextPage;
     } catch (error) {
         if (error.name === "AbortError") {
-            console.log("fetch-Attractiions-AbortController問題");
+            console.log("Fetch aborted");
         } else {
-            console.error("fetch-Attraction error:", error);
+            console.error("Fetch error:", error);
         }
         return null;
     }
@@ -98,77 +97,6 @@ function createParentsElmDiv(attraction) {
 }
 
 
-//透過List Bar方式抓data
-async function loadMrtStations() {
-    if (mrtController) {
-        mrtController.abort();
-    }
-    mrtController = new AbortController();
-    try {
-        const jsonData = await fetchMrtStations(mrtController);
-        const stationsList = jsonData.data;
-        const fragment = document.createDocumentFragment();
-
-        for (const stationList of stationsList) {
-            const elmLi = createElmAndClass("li", "carousel__item");
-            elmLi.textContent = stationList;
-            fragment.appendChild(elmLi);
-        }
-        carouselTrack.appendChild(fragment);
-    } catch (error) {
-        if (error.name === "AbortError") {
-            console.log("fetch-Mrt-AbortController問題");
-        } else {
-            console.error("fetch-Mrt error:", error);
-        }
-    }
-}
-loadMrtStations();
-
-const getScrollAmount = () => {
-    if (window.innerWidth >= 1200) {
-        return 12;
-    } else if (window.innerWidth >= 700) {
-        return 8;
-    } else if (window.innerWidth >= 500) {
-        return 4;
-    } else {
-        return 2;
-    }
-}
-
-let currentIndex = 0;    // 現在表示されているカルーセルアイテムのインデックスを保持
-const updateCarousel = () => {   //カルーセルの位置を更新するための関数
-    const width = carouselTrack.children[0].getBoundingClientRect().width;  //カルーセルアイテムの幅を取得(各アイテムは同じ幅で設計されることがほとんど).getBoundingClientRect()は要素のサイズと位置を含むDOMRectオブジェクトを返す
-    carouselTrack.style.transform = `translateX(-${currentIndex * width}px)`;  //カルーセルの位置の更新-は左に移動の意味
-}
-leftButton.addEventListener("click", () => {
-    const scrollAmount = getScrollAmount();
-    if (currentIndex > 0) {
-        currentIndex = Math.max(0, currentIndex - scrollAmount);
-        updateCarousel();
-    }
-})
-rightButton.addEventListener("click", () => {
-    const scrollAmount = getScrollAmount();
-    if (currentIndex < stationsList.length - scrollAmount) {
-        currentIndex = Math.min(stationsList.length - scrollAmount - 2, currentIndex + scrollAmount);   //2は最後の微調整
-        updateCarousel();
-    }
-})
-
-carouselTrack.addEventListener("click", async(event) => {
-    if (event.target.classList.contains("carousel__item")) {
-        keyword = event.target.textContent;
-        inputAttrQryS.value = keyword;
-        page = 0;
-        tabsQryS.textContent = "";
-        page = await loadMoreItems(page, keyword);
-    }
-})
-
-
-
 document.addEventListener("DOMContentLoaded", async () => {    //loadMoreItemsは非同期関数で、関数は常にPromiseを返す為、内部でawaitしても、再度awaitする必要あり。
     page = await loadMoreItems(page, keyword);   //0ページ目の読み込み(homepage入った時の)
 
@@ -203,6 +131,63 @@ document.addEventListener("DOMContentLoaded", async () => {    //loadMoreItems�
         }
     })
 
+
+    //透過List Bar方式抓data
+    const response = await fetch("/api/mrts");
+    const jsonData = await response.json();
+    const stationsList = jsonData.data;
+    const fragment = document.createDocumentFragment();
+
+    for (const stationList of stationsList) {
+        const elmLi = createElmAndClass("li", "carousel__item");
+        elmLi.textContent = stationList;
+        fragment.appendChild(elmLi);
+    }
+    carouselTrack.appendChild(fragment);
+
+
+    const getScrollAmount = () => {
+        if (window.innerWidth >= 1200) {
+            return 12;
+        } else if (window.innerWidth >= 700) {
+            return 8;
+        } else if (window.innerWidth >= 500) {
+            return 4;
+        } else {
+            return 2;
+        }
+    }
+
+    let currentIndex = 0;    // 現在表示されているカルーセルアイテムのインデックスを保持
+    const updateCarousel = () => {   //カルーセルの位置を更新するための関数
+        const width = carouselTrack.children[0].getBoundingClientRect().width;  //カルーセルアイテムの幅を取得(各アイテムは同じ幅で設計されることがほとんど).getBoundingClientRect()は要素のサイズと位置を含むDOMRectオブジェクトを返す
+        carouselTrack.style.transform = `translateX(-${currentIndex * width}px)`;  //カルーセルの位置の更新-は左に移動の意味
+    }
+    leftButton.addEventListener("click", () => {
+        const scrollAmount = getScrollAmount();
+        if (currentIndex > 0) {
+            currentIndex = Math.max(0, currentIndex - scrollAmount);
+            updateCarousel();
+        }
+    })
+    rightButton.addEventListener("click", () => {
+        const scrollAmount = getScrollAmount();
+        if (currentIndex < stationsList.length - scrollAmount) {
+            currentIndex = Math.min(stationsList.length - scrollAmount - 2, currentIndex + scrollAmount);   //2は最後の微調整
+            updateCarousel();
+        }
+    })
+
+
+    carouselTrack.addEventListener("click", async(event) => {
+        if (event.target.classList.contains("carousel__item")) {
+            keyword = event.target.textContent;
+            inputAttrQryS.value = keyword;
+            page = 0;
+            tabsQryS.textContent = "";
+            page = await loadMoreItems(page, keyword);
+        }
+    })
 })
 
 
