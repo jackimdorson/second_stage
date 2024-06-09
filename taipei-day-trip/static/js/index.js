@@ -7,29 +7,22 @@ const carouselTrack = document.querySelector('.carousel__track');
 const leftButton = document.querySelector('.carousel__button--left');
 const rightButton = document.querySelector('.carousel__button--right');
 
-async function fetchWithAbort(url) {   //controllerはcurrentControllerを受けるための単なる引数
-    const controller = new AbortController();
-    const response = await fetch(url, { signal: controller.signal }); //fetchリクエストにAbortSignalを渡す事でAbortControllerを使用してリクエストを中断が可能に
-    if (!response.ok) {
-        throw new Error(`HTTP Error status:${response.status}`);
-    }
-    const jsonData = await response.json();
-    controller.abort(); // リクエスト完了したら、そのAbortControllerインスタンスを破棄
-    return jsonData;
-}
-
 async function fetchAttractions(pageArg, keywordArg){
     let url = `/api/attractions?page=${encodeURIComponent(pageArg)}`;
     if (keywordArg) {
         url += `&keyword=${encodeURIComponent(keywordArg)}`;
     }
-    return fetchWithAbort(url);
+    const response = await fetch(url);
+    const jsonData = await response.json();
+    return jsonData;
 }
 
 
 let page = 0;
 let keyword = null;
 async function loadMoreItems(pageArg, keywordArg) {   //非同期関数のreturnはawaitで処理しても常にPromiseを返す
+
+
     try {
         const jsonData = await fetchAttractions(pageArg, keywordArg);       // fetch().dataとする事はできない。
         if (!jsonData.data) {
@@ -46,11 +39,7 @@ async function loadMoreItems(pageArg, keywordArg) {   //非同期関数のreturn
         tabsQryS.appendChild(fragment);   //appendChildは再描画しないといけない為、fragment経由で一度にDOMに追加
         return jsonData.nextPage;
     } catch (error) {
-        if (error.name === "AbortError") {
-            console.log("Fetch aborted");
-        } else {
             console.error("Fetch error:", error);
-        }
         return null;
     }
 }
@@ -89,6 +78,15 @@ function createParentsElmDiv(attraction) {
 }
 
 
+function debounce(func, wait) {   //関数とwait時間を受け取り、発生した複数のイベントを1回のイベントにまとめる
+    let timeout;   //timerを格納する変数
+    return function(...args){    //任意の引数を受け取るの意味。
+        clearTimeout(timeout);   //タイマーが期限切れになる前に新しいイベントが発生すると、タイマーはリセット
+        timeout = setTimeout(() => func.apply(this, args), wait);  //新しいタイマーを設定し、ウェイト時間後に関数を実行
+    }
+}
+
+
 document.addEventListener("DOMContentLoaded", async () => {    //loadMoreItemsは非同期関数で、関数は常にPromiseを返す為、内部でawaitしても、再度awaitする必要あり。
     page = await loadMoreItems(page, keyword);   //0ページ目の読み込み(homepage入った時の)
 
@@ -99,13 +97,14 @@ document.addEventListener("DOMContentLoaded", async () => {    //loadMoreItems�
         rootMargin: "0px",
         threshold: 0.5       // 1.0=ターゲットが 100% 表示された時にコールバックが呼び出される
     }
-    const callback = async (entries, observer) => {
+    const callback = debounce(async (entries, observer) => {
         for (const entry of entries) {
             if (entry.isIntersecting && page !== null) {    //要素がviewportに入っている
                 page = await loadMoreItems(page, keyword);
             }
         }
-    }
+    }, 400)  //タイマーがカウントダウンの終わりに達すると、デバウンス関数が実行
+
     const observer = new IntersectionObserver(callback, options);
     observer.observe(footer);
 
