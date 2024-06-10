@@ -1,0 +1,71 @@
+@use "_base.scss" as *;
+
+// @font-face {     //font読み込みの記述
+//     font-family: "Noto Sans TC";
+//     src:
+//         url("../fonts/NotoSansTC-Bold.woff") format("woff"),
+//         url("../fonts/NotoSansTC-Medium.woff") format("woff"),
+//         url("../fonts/NotoSansTC-Regular.woff") format("woff");
+//     display: swap;
+// }
+
+[data-theme="dark"]{
+    background-color: $black;
+    color: $white;
+}
+
+.search-box {
+    width: 285px;
+    border-radius: 5px;
+    background-color: $cyan448;
+
+    &__label {
+        @include flex-vertical-center();
+    }
+    &__input {
+        width: 225px;
+        height: 46px;
+        box-sizing: border-box;
+        padding: 15px;
+        border-radius: 5px 0 0 5px;
+
+        &::placeholder {
+            color: $gray757;
+        }
+    }
+    &__icon {
+        margin: 0 auto;
+    }
+}
+
+
+.footer {
+    margin-top: auto;
+    height: 104px;
+    width: 100%;
+    @include flex-vertical-center;
+    justify-content: center;
+    background-color: $gray757;
+    color: white;
+}
+
+.container {
+    padding: 40px 0;   //指定值
+}
+
+.carousel {
+    cursor: pointer;
+    &__button {
+        opacity: 0.5;
+
+        &:hover {
+            opacity: 1;
+        }
+    }
+    &__item:hover {
+        color: $black;
+    }
+    &__track {
+        transition: transform 0.3s ease-in-out;
+    }
+}

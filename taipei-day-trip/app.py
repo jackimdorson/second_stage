@@ -188,6 +188,7 @@ async def get_mrts():
 					SELECT mrts.name, COUNT(a.id) AS a_count
 					FROM mrts
 					INNER JOIN attractions As a ON mrts.id = a.mrt_id
+				    WHERE mrts.name != 'Unknown'
 					GROUP BY mrts.name
 					ORDER BY a_count DESC
 				""")

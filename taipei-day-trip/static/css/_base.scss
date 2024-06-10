@@ -1,0 +1,21 @@
+$black: black;
+$white: white;
+$cyan448: #448899;  // main
+$cyan66A: #66AABB;
+$cyanAAD: #AADDEE;
+$gray666: #666666;  // main
+$gray757: #757575;  // footer
+$grayE8E: #E8E8E8;
+$grayF8F: #F8F8F8;
+
+
+@mixin flex-vertical-center {
+    display: flex;
+    align-items: center;
+}
+
+
+@mixin max-width-center{
+    max-width: 1200px;
+    margin: 0 auto;
+}

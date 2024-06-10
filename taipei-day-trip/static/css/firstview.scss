@@ -1,0 +1,200 @@
+// Googleの推奨する項目「firstViewで利用しているCSS」,それ以外は遅延読み込み
+// CSSはレンダーblockingリソース。ブラウザはCSSを完全にダウンロードし、解析してからページのレンダリングを開始
+@use "_base.scss" as *;
+
+// ⬇️ original css_reset      // デフォルトは、content-box, width: 100%でなく、autoを使う。
+body {
+    margin: 0;     //ブラウザのdefaultで生じるbodyの外にある余白を消す
+    & ul {
+        list-style: none;
+        padding-inline-start: unset;
+    }
+    & a {
+        text-decoration: none;
+        color: unset;
+    }
+    & p, ul, h1, h2, h3, h4, h5 {        //ol, blockquote, figure也有
+        margin-block-start: unset;
+        margin-block-end: unset;
+    }
+    & input {
+        border: unset;
+    }
+}   // ⬆️ original css_reset
+
+
+body {     //コンテンツが少ない時でもfooterを一番下に置くための記述(flexの方法)
+    font-family: "Noto Sans TC";
+    display: flex;
+    flex-direction: column;
+
+    & main {      //footerをスクロールした際に表示させる方法
+        min-height: 100vh;
+    }
+    & img {
+        object-fit: cover;
+    }
+}
+
+
+.header {
+    @include flex-vertical-center();
+    justify-content: space-between;
+
+    & a {
+        @include flex-vertical-center();
+        height: 34px;
+        margin: 10px;
+    }
+    &__title {
+        color: $cyan448;
+        font-size: 30px;      //h2指定font大小
+    }
+    &__nav {
+        @include flex-vertical-center();
+        color: $gray666;
+    }
+}
+
+
+.hero {
+    height: 320px;
+    color: $white;
+    background-image: url("/static/images/bg/bg-hero-mobile.webp");    //png対比25%程容量が小さく透明性もok
+    background-size: cover;      //画像を中央にする為に必要
+    background-position: center;      //画像を中央にする為に必要
+    @include flex-vertical-center();
+
+    &__content {
+        padding: 0 20px;
+        width: 100%;
+        color: $grayF8F;
+        display: grid;
+        gap: 20px;
+        box-sizing: border-box;
+
+        &__title {
+            font-size: 28px;      //h1指定font大小
+        }
+        &__text {
+            font-size: 16px;
+        }
+    }
+}
+
+
+.tabs {
+    display: grid;
+    gap: 30px;
+    padding: 15px;
+    box-sizing: border-box;
+
+    &__item {
+        height: 280px;
+        position: relative;
+        border: 1px solid $grayE8E;
+        border-radius: 5px;
+
+        &:hover {
+            opacity: 0.9;
+        }
+    }
+    &__img {
+        width: 100%;
+        height: calc(100% - 45px);
+        border-radius: 5px 5px 0 0;
+    }
+    &__name {
+        position: absolute;
+        bottom: 45px;
+        height: 40px;
+        width: 100%;
+        background-color: rgba(0, 0, 0, 0.6);   //指定#000000 opacity60%
+        color: $white;
+        padding: 10px;
+        box-sizing: border-box;
+        ///...3つで1組
+        white-space: nowrap;    //1行にする
+        overflow: hidden;
+        text-overflow: ellipsis;   //...にする
+        line-height: 20px;    // elipsisで高さに問題が生じた際に使用
+    }
+    &__info {
+        position: absolute;
+        bottom: 0;
+        height: 45px;
+        width: 100%;
+        @include flex-vertical-center();
+        justify-content: space-between;
+        color: $gray757;
+        padding: 10px;
+        box-sizing: border-box;
+    }
+}
+
+
+.carousel {
+    padding: 0 15px 20px;
+    box-sizing: border-box;
+    @include flex-vertical-center();
+    @include max-width-center();
+    color: $gray666;
+
+    &__track-container {
+        overflow: hidden;
+        margin: 13px 10px;
+        width: 100%;
+    }
+    &__track {
+        display: flex;
+    }
+    &__item {
+        min-width: fit-content;
+        padding: 0 15px;
+        text-align: center;
+    }
+}
+
+
+@media (min-width: 500px) {
+    .hero {
+        background-image: url("/static/images/bg/bg-hero-desktop.webp");
+        background-size: cover;
+
+        &__content {
+            @include max-width-center();
+        }
+    }
+    .search-box {
+        max-width: 460px;
+    }
+    .tabs {
+        @include max-width-center();
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+
+@media (min-width: 700px) {     //for常常pc視窗並排的User, 像自己非常需要
+    .tabs {
+        @include max-width-center();
+        gap: 18px;
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+
+@media (min-width: 1200px) {
+    .header {
+        width: 1200px;
+        margin: 0 auto;
+    }
+    .tabs {
+        @include max-width-center();
+        grid-template-columns: repeat(4, 1fr);   //grid, 不像flex無法至中
+
+        &__item {
+            height: 270px;
+        }
+    }
+}
