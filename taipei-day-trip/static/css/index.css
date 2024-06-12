@@ -187,6 +187,7 @@ body img {
 .carousel__track {
   display: flex;
   transition: transform 0.3s ease-in-out;
+  overflow-x: scroll;
 }
 .carousel__item {
   min-width: -moz-fit-content;
@@ -237,9 +238,6 @@ body img {
     max-width: 1200px;
     margin: 0 auto;
   }
-  .search-box {
-    max-width: 460px;
-  }
   .tabs {
     max-width: 1200px;
     margin: 0 auto;
@@ -252,6 +250,12 @@ body img {
     margin: 0 auto;
     gap: 18px;
     grid-template-columns: repeat(3, 1fr);
+  }
+  .search-box {
+    width: 460px;
+  }
+  .search-box__input {
+    width: 400px;
   }
 }
 @media (min-width: 1200px) {

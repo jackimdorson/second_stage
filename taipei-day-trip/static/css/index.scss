@@ -99,6 +99,7 @@
     &__track {
         display: flex;
         transition: transform 0.3s ease-in-out;
+        overflow-x: scroll;
     }
     &__item {
         min-width: fit-content;
@@ -151,9 +152,6 @@
             @include init.max-width-center;
         }
     }
-    .search-box {
-        max-width: 460px;
-    }
     .tabs {
         @include init.max-width-center;
         grid-template-columns: repeat(2, 1fr);
@@ -166,6 +164,13 @@
         @include init.max-width-center;
         gap: 18px;
         grid-template-columns: repeat(3, 1fr);
+    }
+    .search-box {
+        width: 460px;
+
+        &__input {
+            width: 400px;
+        }
     }
 }
 

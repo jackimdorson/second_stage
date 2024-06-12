@@ -10,7 +10,7 @@
   <link rel="preload" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
   <link rel="preload" href="/static/css/attraction.css" as="style" onload="this.onload=null;this.rel='stylesheet'">  <!-- HTMLのレンダリングはブロックするが、CSSファイル同士は並行してダウンロード -->
 </head>
-<body>
+<body class="body">
   <header class="header">
     <section class="header__content">
       <h2 class="header__title"><a href="/">台北一日遊</a></h2>
@@ -85,6 +85,6 @@
   <footer class="footer">
     <p>COPYRIGHT © 2021 台北一日遊</p>
   </footer>
-  <script defer src="/static/js/attraction.js"></script>
+  <script type="module" src="/static/js/attraction.js"></script>      <!-- module = defer + strict mode -->
 </body>
 </html>

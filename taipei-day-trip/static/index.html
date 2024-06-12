@@ -13,7 +13,7 @@
   <link rel="preload" href="/static/images/bg/bg-hero-desktop.webp" as="image" media="(min-width: 500px)"/>
   <link rel="preload" href="/static/css/index.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
 </head>
-<body>
+<body class="body">
   <header class="header">
     <section class="header__content">
       <h2 class="header__title"><a href="/">台北一日遊</a></h2>
@@ -38,12 +38,16 @@
     </section>
     <section class="container">
       <section class="carousel">     <!-- 独立する為section化可能 -->
-        <img class="carousel__button carousel__button--left" src="/static/images/icons/icon-left-arrow.webp" alt="left-arrow">
+        <button class="carousel__button carousel__button--left">
+          <img src="/static/images/icons/icon-left-arrow.webp" alt="left-arrow">
+        </button>
         <div class="carousel__track-container">
           <ul class="carousel__track">
           </ul>
         </div>
-        <img class="carousel__button carousel__button--right" src="/static/images/icons/icon-right-arrow.webp" alt="right-arrow">
+        <button class="carousel__button carousel__button--right">
+          <img src="/static/images/icons/icon-right-arrow.webp" alt="right-arrow">
+        </button>
       </section>
       <section class="tabs">     <!-- 独立する為section化可能 -->
       </section>
@@ -52,7 +56,7 @@
   <footer class="footer">
     <p>COPYRIGHT © 2021 台北一日遊</p>
   </footer>
-  <script defer src="/static/js/index.js"></script>    <!-- #staticが基準 -->
+  <script type="module" src="/static/js/index.js"></script>    <!-- #staticが基準 -->
 </body>
 </html>
 

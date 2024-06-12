@@ -1,5 +1,7 @@
+"use strict"
+import { fetchResponseJson, preloadImage, createElmAndClass } from "./common.js";
+
 const attractionQryS = document.querySelector(".attraction");
-const imgsQryS = document.querySelector(".attraction__imgs");
 const titleQryS = document.querySelector(".attraction__title");
 const catQryS = document.querySelector(".attraction__cat");
 const mrtQryS = document.querySelector(".attraction__mrt");
@@ -7,46 +9,40 @@ const descQryS = document.querySelector(".info__description");
 const addressQryS = document.querySelector(".info__address");
 const transportQryS = document.querySelector(".info__transport");
 
-
 async function fetchAttractionId(){
     const path = window.location.pathname;  //   /attraction/1を取得
     const attractionId = path.split('/').pop();     //  1を取得
-
-    if(attractionId) {
-        try {
-            const response = await fetch(`/api/attraction/${attractionId}`);
-            const jsonData = await response.json();
-            if (!jsonData.data) {
-                attractionQryS.textContent = jsonData.message;
-                throw new Error("無資料");
-            }
-            for (const imageUrl of jsonData.data.images){
-                const li = document.createElement("li");
-                li.classList.add("carousel__slide");
-                const img = document.createElement("img");
-                img.classList.add("carousel__img");
-                img.src = imageUrl;
-                img.alt = jsonData.data.name;
-                li.appendChild(img);
-                carouselTrackQryS.appendChild(li);
-            }
-            titleQryS.textContent = jsonData.data.name;
-            catQryS.textContent = jsonData.data.category;
-            mrtQryS.textContent = ` at ${jsonData.data.mrt}`;
-            descQryS.textContent = jsonData.data.description;
-            addressQryS.textContent = jsonData.data.address;
-            transportQryS.textContent = jsonData.data.transport;
-
-            initializeCarousel();
-
-        } catch(error) {
-            console.error("Fetch error:", error);
-        }
-    } else {
-        console.error("沒找到attractionId");
+    if (!attractionId) {
+        return null;
     }
+    const jsonData = await fetchResponseJson(`/api/attraction/${attractionId}`);
+    if (!jsonData.data) {
+        attractionQryS.textContent = jsonData.message;
+        return null;
+    }
+    for (const imageUrl of jsonData.data.images){
+        const li = document.createElement("li");
+        li.classList.add("carousel__slide");
+        const img = document.createElement("img");
+        img.classList.add("carousel__img");
+        img.src = imageUrl;
+        img.alt = jsonData.data.name;
+        li.appendChild(img);
+        carouselTrackQryS.appendChild(li);
+    }
+    for (let i = 0; i < 3; i++) {
+        preloadImage(jsonData.data.images[i]);
+    }
+    titleQryS.textContent = jsonData.data.name;
+    catQryS.textContent = jsonData.data.category;
+    mrtQryS.textContent = ` at ${jsonData.data.mrt}`;
+    descQryS.textContent = jsonData.data.description;
+    addressQryS.textContent = jsonData.data.address;
+    transportQryS.textContent = jsonData.data.transport;
+
+    initializeCarousel();
 }
-fetchAttractionId()
+fetchAttractionId();
 
 // カルーセルの動作を制御
 const carouselTrackQryS = document.querySelector(".carousel__track");
@@ -56,14 +52,11 @@ const navQryS = document.querySelector('.carousel__nav');
 let slides = [];
 let indicators = [];
 
-
 const initializeCarousel = () => {
     slides = Array.from(carouselTrackQryS.children);
     let currentIndex = 0;
-
     for (let index = 0; index < slides.length; index++) {  //indicator(...)の作成
-        const indicator = document.createElement("div");
-        indicator.classList.add("carousel__indicator");
+        const indicator = createElmAndClass("div", "carousel__indicator");
         if(index === 0){
             indicator.classList.add("carousel__indicator--active");
         }
@@ -76,9 +69,7 @@ const initializeCarousel = () => {
         })
     }
 
-
-
-    const updateCarousel = () => {
+    const updateCarousel = () => {     //transformはGPUで処理する為、scrollByより良い
         const slideWidth = slides[0].getBoundingClientRect().width;
         carouselTrackQryS.style.transform = `translateX(-${slideWidth * currentIndex}px)`;
         updateIndicators();
@@ -99,15 +90,12 @@ const initializeCarousel = () => {
     });
 
     nextButton.addEventListener('click', () => {
-        console.log(slides);
-        console.log(slides.length);
         if (currentIndex < slides.length - 1) {
             currentIndex++;
             updateCarousel();
         }
     });
 };
-
 
 
 const priceSpan = document.querySelector(".schedule__price--text");
@@ -120,10 +108,4 @@ document.querySelector(".schedule__time").addEventListener("change", function(ev
     if (event.target.name === "selectday") {
         priceSpan.textContent = priceMap[event.target.value];
     }
-})
-
-const dateBtnQryS = document.getElementById('date');
-
-dateBtnQryS.addEventListener("click", function(){
-    dateBtnQryS.focus();
 })
