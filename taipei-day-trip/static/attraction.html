@@ -1,11 +1,90 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-Hant">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Attraction</title>
+  <title>景點</title>
+  <!-- google font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">   <!-- ネットワーク接続の準備を整える(CSSファイルとfontファイルのサーバが異なる為2つ必要) -->
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <link rel="preload" href="/static/css/attraction.css" as="style" onload="this.onload=null;this.rel='stylesheet'">  <!-- HTMLのレンダリングはブロックするが、CSSファイル同士は並行してダウンロード -->
 </head>
 <body>
-  
+  <header class="header">
+    <section class="header__content">
+      <h2 class="header__title"><a href="/">台北一日遊</a></h2>
+      <nav class="header__nav">
+        <a href="#">預定行程</a>
+        <a href="#">登入/註冊</a>
+      </nav>
+    </section>
+    <hr class="hr bottom__header">
+  </header>
+  <main class="main">
+    <section class="attraction">     <!-- 独立する為section化可能 -->
+      <section class="carousel">
+        <button class="carousel__button carousel__button--left">
+          <img src="/static/images/icons/icon-left-arrow.webp" alt="left-arrow">
+        </button>
+          <div class="carousel__track-container">
+            <ul class="carousel__track">
+            </ul>
+        </div>
+        <button class="carousel__button carousel__button--right">
+          <img src="/static/images/icons/icon-right-arrow.webp" alt="right-arrow">
+        </button>
+        <div class="carousel__nav">
+        </div>
+      </section>
+      <section class="attraction__content">
+        <h3 class="attraction__title"></h3>
+        <div class="attraction__info">
+          <span class="attraction__cat"></span>
+          <span class="attraction__mrt"></span>
+        </div>
+        <div class="schedule">
+          <div class="schedule__title">訂購導覽行程</div>
+          <div class="schedule__text">以此景點為中心的一日行程，帶您探索城市角落故事</div>
+          <div class="schedule__date">
+            <label for="date">選擇日期：</label>
+            <input id="date" type="date">
+          </div>
+          <div class="schedule__time">
+            <span class="schedule__time--title">選擇時間：</span>
+            <span class="schedule__time--option">
+              <input type="radio" id="morning" name="selectday" value="morning">
+              <label for="morning">上半天</label>
+            </span>
+            <span class="schedule__time--option">
+              <input type="radio" id="evening" name="selectday" value="evening">
+              <label for="evening">下半天</label>
+            </span>
+          </div>
+          <div class="schedule__price">
+            <span class="schedule__price--title">導覽費用：</span>
+            <span class="schedule__price--text">新台幣 ____ 元</span>
+          </div>
+          <button class="button">開始預約行程</button>
+        </div>
+      </section>
+      <hr class="hr bottom__attraction">
+    </section>
+    <section class="info">
+      <div class="info__description"></div>
+      <div>
+        <div class="info__address--title">景點地址</div>
+        <div class="info__address"></div>
+      </div>
+      <div>
+        <div class="info__transport--title">交通方式</div>
+        <div class="info__transport"></div>
+      </div>
+    </section>
+  </main>
+  <footer class="footer">
+    <p>COPYRIGHT © 2021 台北一日遊</p>
+  </footer>
+  <script defer src="/static/js/attraction.js"></script>
 </body>
 </html>

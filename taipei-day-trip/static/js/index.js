@@ -21,8 +21,6 @@ async function fetchAttractions(pageArg, keywordArg){
 let page = 0;
 let keyword = null;
 async function loadMoreItems(pageArg, keywordArg) {   //非同期関数のreturnはawaitで処理しても常にPromiseを返す
-
-
     try {
         const jsonData = await fetchAttractions(pageArg, keywordArg);       // fetch().dataとする事はできない。
         if (!jsonData.data) {
@@ -38,8 +36,8 @@ async function loadMoreItems(pageArg, keywordArg) {   //非同期関数のreturn
         }
         tabsQryS.appendChild(fragment);   //appendChildは再描画しないといけない為、fragment経由で一度にDOMに追加
         return jsonData.nextPage;
-    } catch (error) {
-            console.error("Fetch error:", error);
+    } catch(error) {
+        console.error("Fetch error:", error);
         return null;
     }
 }
@@ -53,7 +51,8 @@ function createElmAndClass(elm, className) {
 
 
 function createParentsElmDiv(attraction) {
-    const parentElmDiv = createElmAndClass("article", "tabs__item");
+    const parentElmDiv = createElmAndClass("a", "tabs__link");
+    parentElmDiv.href = `/attraction/${attraction.id}`;
 
     const childElmImg = createElmAndClass("img", "tabs__img");
     childElmImg.src = attraction.images[0];
@@ -92,20 +91,20 @@ document.addEventListener("DOMContentLoaded", async () => {    //loadMoreItems�
 
     //透過往下滑方式抓data
     const footer = document.querySelector(".footer");    // 監視する対象
-    const options = {        // IntersectionObserverの設定
+    const options = {        // IntersectionObserverの設定（どのくらい重なると『交差した』ことにするのか）
         root: null,          // null=viewport(ブラウザの表示領域)をルートとして使用
         rootMargin: "0px",
         threshold: 0.5       // 1.0=ターゲットが 100% 表示された時にコールバックが呼び出される
     }
     const callback = debounce(async (entries, observer) => {
-        for (const entry of entries) {
+        for (const entry of entries) {     //intersectingは交差しているかの真偽値を返す
             if (entry.isIntersecting && page !== null) {    //要素がviewportに入っている
                 page = await loadMoreItems(page, keyword);
             }
         }
     }, 400)  //タイマーがカウントダウンの終わりに達すると、デバウンス関数が実行
 
-    const observer = new IntersectionObserver(callback, options);
+    const observer = new IntersectionObserver(callback, options);  //callbackは交差のon/off時に発生
     observer.observe(footer);
 
     //透過SearchBox方式抓data
@@ -180,7 +179,6 @@ document.addEventListener("DOMContentLoaded", async () => {    //loadMoreItems�
         }
     })
 })
-
 
 
 // addEventListenerには2つの方法がある。// 要素が1〜3つしかない場合: => 子要素に対して使う。
