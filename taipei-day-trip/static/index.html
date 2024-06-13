@@ -3,32 +3,33 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>台北一日遊</title>
-  <!-- hero -->
-  <link rel="preload" href="/static/images/bg/bg-hero-mobile.webp" as="image" media="(max-width: 499px)"/>
-  <link rel="preload" href="/static/images/bg/bg-hero-desktop.webp" as="image" media="(min-width: 500px)"/>
-  <!-- preloadはリソースの取得を優先させるためのものであり、実際にスタイルを適用するわけではない -->
-  <link rel="preload" href="/static/css/firstview.css" as="style">
-  <link rel="stylesheet" href="/static/css/firstview.css">
-  <script defer src="/static/js/index.js"></script>    <!-- #staticが基準 -->
-  <!-- google font -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <title>首頁</title>
+  <link rel="preload" href="/static/css/index.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <!-- font: HTMLレンダリングブロック、CSSファイル同士は並行してダウンロードされる為、重いのを先に読み込む but FOUCを防ぐ為cssを先に読み込む -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">   <!-- ネットワーク接続の準備を整える(CSSファイルとfontファイルのサーバが異なる為2つ必要) -->
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" as="style">
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <!-- hero: 誤差の範囲の為cssより後でok　-->
+  <link rel="preload" href="/static/images/bg/bg-hero-mobile.webp" as="image" media="(max-width: 499px)"/>  <!-- 僅下載圖片, 尚未顯示 -->
+  <link rel="preload" href="/static/images/bg/bg-hero-desktop.webp" as="image" media="(min-width: 500px)"/>
 </head>
-<body>
+<body class="body">
   <header class="header">
+    <section class="header__content">
       <h2 class="header__title"><a href="/">台北一日遊</a></h2>
       <nav class="header__nav">
+        <button class="darkmode-btn">
+        </button>
         <a href="#">預定行程</a>
         <a href="#">登入/註冊</a>
       </nav>
+    </section>
   </header>
-  <main>
+  <main class="main">
     <section class="hero">     <!-- 独立する為section化可能 -->
       <div class="hero__content">
-        <h1 class="hero__content__title">輕鬆享受台北一日悠閒</h1>
-        <p class="hero__content__text">探索每個角落，體驗城市的深度旅遊行程</p>
+        <h1 class="hero__title">輕鬆享受台北一日悠閒</h1>
+        <p class="hero__text">探索每個角落，體驗城市的深度旅遊行程</p>
         <div class="search-box">
           <label class="search-box__label">
             <input type="text" class="search-box__input" placeholder="輸入景點名稱查詢">
@@ -39,12 +40,16 @@
     </section>
     <section class="container">
       <section class="carousel">     <!-- 独立する為section化可能 -->
-        <img class="carousel__button carousel__button--left"  loading="lazy" src="/static/images/icons/icon-left-arrow.webp" alt="left-arrow">
+        <button class="carousel__button carousel__button--left">
+          <img src="/static/images/icons/icon-left-arrow.webp" alt="left-arrow">
+        </button>
         <div class="carousel__track-container">
           <ul class="carousel__track">
           </ul>
         </div>
-        <img class="carousel__button carousel__button--right"  loading="lazy" src="/static/images/icons/icon-right-arrow.webp" alt="right-arrow">
+        <button class="carousel__button carousel__button--right">
+          <img src="/static/images/icons/icon-right-arrow.webp" alt="right-arrow">
+        </button>
       </section>
       <section class="tabs">     <!-- 独立する為section化可能 -->
       </section>
@@ -53,8 +58,7 @@
   <footer class="footer">
     <p>COPYRIGHT © 2021 台北一日遊</p>
   </footer>
-  <link rel="stylesheet" href="/static/css/styles.css">   <!-- rel="stylesheet"は、ページのレンダリングをblock, 複数のcssは並行して読み込まれる -->
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap">
+  <script type="module" src="/static/js/index.js"></script>    <!-- #staticが基準 -->
 </body>
 </html>
 

@@ -1,84 +1,27 @@
-// Googleの推奨する項目「firstViewで利用しているCSS」,それ以外は遅延読み込み
-// CSSはレンダーblockingリソース。ブラウザはCSSを完全にダウンロードし、解析してからページのレンダリングを開始
-@use "_base.scss" as *;
-
-// ⬇️ original css_reset      // デフォルトは、content-box, width: 100%でなく、autoを使う。
-body {
-    margin: 0;     //ブラウザのdefaultで生じるbodyの外にある余白を消す
-    & ul {
-        list-style: none;
-        padding-inline-start: unset;
-    }
-    & a {
-        text-decoration: none;
-        color: unset;
-    }
-    & p, ul, h1, h2, h3, h4, h5 {        //ol, blockquote, figure也有
-        margin-block-start: unset;
-        margin-block-end: unset;
-    }
-    & input {
-        border: unset;
-    }
-}   // ⬆️ original css_reset
-
-
-body {     //コンテンツが少ない時でもfooterを一番下に置くための記述(flexの方法)
-    font-family: "Noto Sans TC";
-    display: flex;
-    flex-direction: column;
-
-    & main {      //footerをスクロールした際に表示させる方法
-        min-height: 100vh;
-    }
-    & img {
-        object-fit: cover;
-    }
-}
-
-
-.header {
-    @include flex-vertical-center();
-    justify-content: space-between;
-
-    & a {
-        @include flex-vertical-center();
-        height: 34px;
-        margin: 10px;
-    }
-    &__title {
-        color: $cyan448;
-        font-size: 30px;      //h2指定font大小
-    }
-    &__nav {
-        @include flex-vertical-center();
-        color: $gray666;
-    }
-}
-
+@use "partial/init" as init;   //先頭の_と.scssの記述不要
+@use "partial/same" as same;
 
 .hero {
-    height: 320px;
-    color: $white;
+    color: init.$white;
     background-image: url("/static/images/bg/bg-hero-mobile.webp");    //png対比25%程容量が小さく透明性もok
     background-size: cover;      //画像を中央にする為に必要
     background-position: center;      //画像を中央にする為に必要
-    @include flex-vertical-center();
+    @include init.flex-center2;
+    height: 320px;
 
     &__content {
         padding: 0 20px;
         width: 100%;
-        color: $grayF8F;
+        color: init.$grayF8F;
         display: grid;
         gap: 20px;
         box-sizing: border-box;
-
-        &__title {
-            font-size: 28px;      //h1指定font大小
-        }
-        &__text {
-            font-size: 16px;
-        }
+    }
+    &__title {
+        font-size: 28px;      //h1指定font大小
+    }
+    &__text {
+        font-size: 16px;
     }
 }
 
@@ -89,10 +32,10 @@ body {     //コンテンツが少ない時でもfooterを一番下に置くた�
     padding: 15px;
     box-sizing: border-box;
 
-    &__item {
+    &__link {
         height: 280px;
         position: relative;
-        border: 1px solid $grayE8E;
+        border: 1px solid init.$grayE8E;
         border-radius: 5px;
 
         &:hover {
@@ -110,7 +53,7 @@ body {     //コンテンツが少ない時でもfooterを一番下に置くた�
         height: 40px;
         width: 100%;
         background-color: rgba(0, 0, 0, 0.6);   //指定#000000 opacity60%
-        color: $white;
+        color: init.$white;
         padding: 10px;
         box-sizing: border-box;
         ///...3つで1組
@@ -124,9 +67,9 @@ body {     //コンテンツが少ない時でもfooterを一番下に置くた�
         bottom: 0;
         height: 45px;
         width: 100%;
-        @include flex-vertical-center();
+        @include init.flex-center2;
         justify-content: space-between;
-        color: $gray757;
+        color: init.$gray757;
         padding: 10px;
         box-sizing: border-box;
     }
@@ -136,10 +79,18 @@ body {     //コンテンツが少ない時でもfooterを一番下に置くた�
 .carousel {
     padding: 0 15px 20px;
     box-sizing: border-box;
-    @include flex-vertical-center();
-    @include max-width-center();
-    color: $gray666;
+    @include init.flex-center2;
+    @include init.max-width-center;
+    color: init.$gray666;
+    cursor: pointer;
 
+    &__button {
+        opacity: 0.5;
+
+        &:hover {
+            opacity: 1;
+        }
+    }
     &__track-container {
         overflow: hidden;
         margin: 13px 10px;
@@ -147,13 +98,49 @@ body {     //コンテンツが少ない時でもfooterを一番下に置くた�
     }
     &__track {
         display: flex;
+        transition: transform 0.3s ease-in-out;
+        overflow: hidden;   //hiddenとすることで下部スクロールを削除。表示するには右記が必要overflow-x: scroll;
     }
     &__item {
         min-width: fit-content;
         padding: 0 15px;
         text-align: center;
+
+        &:hover {
+            color: init.$black;
+        }
     }
 }
+
+.search-box {
+    width: 285px;
+    border-radius: 5px;
+    background-color: init.$cyan448;
+
+    &__label {
+        @include init.flex-center2;
+    }
+    &__input {
+        width: 225px;
+        height: 46px;
+        box-sizing: border-box;
+        padding: 15px;
+        border-radius: 5px 0 0 5px;
+
+        &::placeholder {
+            color: init.$gray757;
+        }
+    }
+    &__icon {
+        margin: 0 auto;
+    }
+}
+
+
+.container {
+    padding: 40px 0;   //指定值
+}
+
 
 
 @media (min-width: 500px) {
@@ -162,14 +149,11 @@ body {     //コンテンツが少ない時でもfooterを一番下に置くた�
         background-size: cover;
 
         &__content {
-            @include max-width-center();
+            @include init.max-width-center;
         }
     }
-    .search-box {
-        max-width: 460px;
-    }
     .tabs {
-        @include max-width-center();
+        @include init.max-width-center;
         grid-template-columns: repeat(2, 1fr);
     }
 }
@@ -177,24 +161,32 @@ body {     //コンテンツが少ない時でもfooterを一番下に置くた�
 
 @media (min-width: 700px) {     //for常常pc視窗並排的User, 像自己非常需要
     .tabs {
-        @include max-width-center();
+        @include init.max-width-center;
         gap: 18px;
         grid-template-columns: repeat(3, 1fr);
+    }
+    .search-box {
+        width: 460px;
+
+        &__input {
+            width: 400px;
+        }
     }
 }
 
 
 @media (min-width: 1200px) {
-    .header {
-        width: 1200px;
-        margin: 0 auto;
-    }
     .tabs {
-        @include max-width-center();
+        @include init.max-width-center;
         grid-template-columns: repeat(4, 1fr);   //grid, 不像flex無法至中
 
-        &__item {
+        &__link {
             height: 270px;
         }
     }
 }
+
+
+
+
+

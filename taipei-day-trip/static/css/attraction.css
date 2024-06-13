@@ -1,0 +1,329 @@
+body {
+  margin: 0;
+}
+body ul {
+  list-style: none;
+  padding-inline-start: unset;
+}
+body a {
+  text-decoration: none;
+  color: unset;
+}
+body p, body ul, body hr, body h1, body h2, body h3, body h4, body h5 {
+  margin-block: unset;
+}
+body input {
+  border: unset;
+}
+body button {
+  background: none;
+  border: none;
+  padding: unset;
+}
+
+body {
+  font-family: "Noto Sans TC";
+  display: flex;
+  flex-direction: column;
+}
+body main {
+  min-height: 100vh;
+  padding: 54px 0;
+}
+body img {
+  -o-object-fit: cover;
+     object-fit: cover;
+}
+
+.darkmode-btn {
+  display: none;
+}
+
+.header {
+  width: 100%;
+  height: 54px;
+  background-color: white;
+  position: fixed;
+  z-index: 5;
+}
+.header__content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.header a {
+  display: flex;
+  align-items: center;
+  height: 34px;
+  margin: 10px;
+}
+.header__title {
+  color: #448899;
+  font-size: 30px;
+}
+.header__nav {
+  display: flex;
+  align-items: center;
+  color: #666666;
+}
+
+.footer {
+  margin-top: auto;
+  height: 104px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #757575;
+  color: white;
+}
+
+@media (min-width: 500px) {
+  [data-theme=dark] .body .header, [data-theme=dark] .body .main, [data-theme=dark] .body .footer {
+    background-color: black;
+  }
+  [data-theme=dark] .body .header div, [data-theme=dark] .body .main div, [data-theme=dark] .body .footer div {
+    color: white;
+  }
+  [data-theme=dark] .body .header a, [data-theme=dark] .body .main a, [data-theme=dark] .body .footer a {
+    color: #448899;
+  }
+  [data-theme=dark] .body div[class=tabs__name] {
+    background-color: rgba(255, 255, 255, 0.8);
+    color: #757575;
+  }
+  [data-theme=dark] .body div[class=schedule] {
+    background-color: #666666;
+  }
+  [data-theme=dark] .body li[class=carousel__item]:hover {
+    color: #757575;
+  }
+  .darkmode-btn {
+    display: block;
+    width: 32px;
+    height: 32px;
+    margin: 10px;
+  }
+  .darkmode-btn > img {
+    width: 100%;
+    height: 100%;
+  }
+}
+@media (min-width: 1200px) {
+  .header__content, main__content {
+    width: 1200px;
+    margin: 0 auto;
+  }
+}
+.button {
+  width: 154px;
+  height: 36px;
+  border-radius: 5px;
+  background-color: #448899;
+  padding: 10px 20px;
+}
+
+body {
+  color: #666666;
+}
+
+.attraction {
+  display: grid;
+  gap: 30px;
+}
+.attraction__content {
+  display: grid;
+  gap: 15px;
+  padding: 0 10px;
+}
+.attraction__title {
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.schedule {
+  background-color: #E8E8E8;
+  padding: 20px;
+  border-radius: 5px;
+  display: grid;
+  gap: 15px;
+}
+.schedule__title, .schedule__date, .schedule__price--title {
+  font-weight: 700;
+}
+.schedule__time {
+  display: flex;
+  align-items: center;
+}
+.schedule__time--title {
+  font-weight: 700;
+}
+.schedule__time--option {
+  display: flex;
+  align-items: center;
+  padding: 0 10px;
+}
+
+input[type=radio] {
+  margin: 0 3px;
+  -webkit-appearance: none;
+     -moz-appearance: none;
+          appearance: none;
+  background-color: white;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  padding: 10px;
+  cursor: pointer;
+}
+input[type=radio]:checked {
+  background-color: #448899;
+  box-shadow: inset 0 0 0 2px white;
+}
+
+input[type=date] {
+  background: url("/static/images/icons/icon-calendar.webp") no-repeat center right 10px white;
+  width: 165px;
+  height: 35px;
+  padding: 0 10px;
+}
+input[type=date]::-webkit-calendar-picker-indicator {
+  background: transparent;
+}
+
+.carousel {
+  width: 100%;
+  position: relative;
+}
+.carousel__button {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  z-index: 1;
+}
+.carousel__button--left {
+  left: 10px;
+}
+.carousel__button--right {
+  right: 10px;
+}
+.carousel__button img {
+  opacity: 75%;
+}
+.carousel__button img:hover {
+  opacity: 1;
+}
+.carousel__track-container {
+  overflow: hidden;
+}
+.carousel__track {
+  display: flex;
+  transition: transform 0.3s ease-in-out;
+}
+.carousel__track--disable {
+  transition: none;
+}
+.carousel__slide {
+  min-width: 100%;
+  max-height: 350px;
+}
+.carousel__img {
+  width: 100%;
+  min-height: 350px;
+}
+.carousel__nav {
+  display: flex;
+  align-items: center;
+  position: absolute;
+  bottom: 5px;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  opacity: 75%;
+}
+.carousel__indicator {
+  width: 12px;
+  height: 12px;
+  background-color: white;
+  border-radius: 50%;
+  margin: 0 5px;
+  cursor: pointer;
+}
+.carousel__indicator--active {
+  background-color: black;
+  border: 1px solid white;
+}
+
+.button {
+  font-size: 19px;
+  display: flex;
+  align-items: center;
+  color: white;
+  font-weight: 400;
+}
+
+.info {
+  display: grid;
+  gap: 30px;
+  padding: 40px 20px;
+}
+.info__address--title, .info__transport--title {
+  font-weight: 700;
+}
+
+.hr {
+  height: 1px;
+  background-color: #E8E8E8;
+  margin: unset;
+  border: none;
+}
+.hr.bottom__header {
+  display: none;
+}
+.hr.bottom__attraction {
+  width: calc(100% - 20px);
+  margin: 0 auto;
+}
+
+@media (min-width: 700px) {
+  .attraction {
+    height: 400px;
+    padding: 40px 15px;
+    grid-template-columns: 48% 51%;
+    gap: 40px 10px;
+  }
+  .carousel__slide {
+    max-height: 400px;
+  }
+  .carousel__img {
+    border-radius: 5px;
+    height: 400px;
+  }
+  .hr.bottom__header {
+    margin-bottom: 40px;
+    display: block;
+    width: 100%;
+    background-color: #E8E8E8;
+  }
+  .hr.bottom__attraction {
+    grid-column: span 2;
+  }
+}
+@media (min-width: 1200px) {
+  main {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  .attraction {
+    height: 400px;
+    padding: 40px 15px;
+    grid-template-columns: 540px 600px;
+  }
+  .carousel__slide {
+    max-height: 400px;
+  }
+  .carousel__img {
+    border-radius: 5px;
+    height: 400px;
+  }
+}/*# sourceMappingURL=attraction.css.map */

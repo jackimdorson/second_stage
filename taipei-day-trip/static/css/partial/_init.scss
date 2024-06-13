@@ -1,0 +1,155 @@
+// _init = scss変数＋@minxin+全サイト使い回せる基本構成を格納
+$black: black;
+$white: white;
+$cyan448: #448899;  // main
+$cyan66A: #66AABB;
+$cyanAAD: #AADDEE;
+$gray666: #666666;  // main
+$gray757: #757575;  // footer
+$grayE8E: #E8E8E8;
+$grayF8F: #F8F8F8;
+
+@mixin flex-center2() {
+    display: flex;
+    align-items: center;
+}
+
+@mixin flex-center3() {
+    @include flex-center2;
+    justify-content: center;
+}
+
+@mixin max-width-center() {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+// ⬇️ original css_reset      // デフォルトは、content-box, width: 100%でなく、autoを使う。
+body {
+    margin: 0;     //ブラウザのdefaultで生じるbodyの外にある余白を消す
+    & ul {
+        list-style: none;
+        padding-inline-start: unset;
+    }
+    & a {
+        text-decoration: none;
+        color: unset;
+    }
+    & p, ul, hr, h1, h2, h3, h4, h5 {        //ol, blockquote, figure也有
+        margin-block: unset
+    }
+    & input {
+        border: unset;
+    }
+    & button {
+        background: none;
+        border: none;
+        padding: unset;
+    }
+}   // ⬆️ original css_reset
+
+
+body {     //コンテンツが少ない時でもfooterを一番下に置くための記述(flexの方法)
+    font-family: "Noto Sans TC";
+    display: flex;
+    flex-direction: column;
+
+    & main {      //footerをスクロールした際に表示させる方法
+        min-height: 100vh;
+        padding: 54px 0;     //headerのfixed分下に移動
+    }
+    & img {
+        object-fit: cover;
+    }
+}
+
+
+.darkmode-btn {
+    display: none;
+}
+
+.header {
+    width: 100%;
+    height: 54px;
+    background-color: $white;
+    position: fixed;
+    z-index: 5;
+
+    &__content {
+        @include flex-center2;
+        justify-content: space-between;
+    }
+
+    & a {
+        @include flex-center2;
+        height: 34px;
+        margin: 10px;
+    }
+    &__title {
+        color: $cyan448;
+        font-size: 30px;      //h2指定font大小
+    }
+    &__nav {
+        @include flex-center2;
+        color: $gray666;
+    }
+}
+
+.footer {
+    margin-top: auto;
+    height: 104px;
+    width: 100%;
+    @include flex-center2;
+    justify-content: center;
+    background-color: $gray757;
+    color: $white;
+}
+
+@media (min-width: 500px) {
+    [data-theme="dark"] {
+        .body {
+            & .header, & .main, & .footer {
+                background-color: $black;
+                & div {
+                    color: $white;
+                }
+                & a {
+                    color: $cyan448;
+                }
+            }
+            div {
+                &[class="tabs__name"]{
+                    background-color: rgba(255, 255, 255, 0.8);
+                    color: $gray757;
+                }
+                &[class="schedule"]{
+                    background-color: $gray666;
+                }
+            }
+            li[class="carousel__item"]:hover {
+                color: $gray757;
+            }
+        }
+    }
+    .darkmode-btn {
+        display: block;
+        width: 32px;
+        height: 32px;
+        margin: 10px;
+
+        & > img {
+            width: 100%;
+            height: 100%;
+        }
+    }
+}
+
+
+@media (min-width: 1200px) {
+    .header, main {
+        &__content {
+            width: 1200px;
+            margin: 0 auto;
+        }
+    }
+}
