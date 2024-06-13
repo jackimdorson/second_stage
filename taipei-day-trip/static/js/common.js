@@ -53,3 +53,23 @@ export function enableDarkMode() {
     const initialMode = document.documentElement.getAttribute("data-theme");
     updateImage(initialMode);
 }
+
+export function jump2Top() {
+    const toTopBtn = document.querySelector(".jump2top-btn");
+    const imgElm = document.createElement("img");
+    imgElm.alt = "jump-btn";
+    imgElm.src = "/static/images/icons/icon-up.webp";
+    toTopBtn.appendChild(imgElm);
+
+    let isScrolling;
+    window.addEventListener("scroll", () => {
+        toTopBtn.style.display = "block";
+        clearTimeout(isScrolling);
+        isScrolling = setTimeout(() => {
+            toTopBtn.style.display = "none";
+        }, 1200);
+    })
+    toTopBtn.addEventListener("click", () => {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+    })
+}

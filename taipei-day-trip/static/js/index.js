@@ -1,5 +1,5 @@
 "use strict"
-import { fetchResponseJson, preloadImage, createElmAndClass, debounce, enableDarkMode } from "./common.js";
+import { fetchResponseJson, preloadImage, createElmAndClass, debounce, enableDarkMode, jump2Top } from "./common.js";
 
 const tabsQryS = document.querySelector(".tabs");
 const inputAttrQryS = document.querySelector(".search-box__input");
@@ -150,6 +150,7 @@ document.addEventListener("DOMContentLoaded", async () => {    //loadNextPageは
     }
     carouselTrack.addEventListener("click", debounce(showOnSearchBox, 400));
     enableDarkMode();
+    jump2Top();
 })
 
 

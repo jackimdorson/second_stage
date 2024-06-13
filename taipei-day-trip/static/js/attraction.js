@@ -1,5 +1,5 @@
 "use strict"
-import { fetchResponseJson, preloadImage, createElmAndClass, enableDarkMode } from "./common.js";
+import { fetchResponseJson, preloadImage, createElmAndClass, enableDarkMode, jump2Top } from "./common.js";
 
 const attractionQryS = document.querySelector(".attraction");
 const titleQryS = document.querySelector(".attraction__title");
@@ -127,3 +127,4 @@ document.querySelector(".schedule__time").addEventListener("change", function(ev
     }
 })
 enableDarkMode();
+jump2Top();
