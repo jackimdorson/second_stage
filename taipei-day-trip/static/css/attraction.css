@@ -190,6 +190,9 @@ input[type=date]::-webkit-calendar-picker-indicator {
   display: flex;
   transition: transform 0.3s ease-in-out;
 }
+.carousel__track--disable {
+  transition: none;
+}
 .carousel__slide {
   min-width: 100%;
   max-height: 350px;

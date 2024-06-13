@@ -83,18 +83,21 @@ document.addEventListener("DOMContentLoaded", async () => {    //loadNextPageは
 
 
     //透過SearchBox方式抓data
-    clickAttrQryS.addEventListener("click", async function() {
+    async function handleClick() {
         page = 0;
         keyword = inputAttrQryS.value;
         tabsQryS.textContent = "";
         inputAttrQryS.value = "";
         page = await loadNextPage(page, keyword);
-    })
-    inputAttrQryS.addEventListener("keydown", function(event) {
+    }
+
+    function handleKeydown(event) {
         if (event.key === "Enter"){
             clickAttrQryS.click();
         }
-    })
+    }
+    clickAttrQryS.addEventListener("click", debounce(handleClick, 400));
+    inputAttrQryS.addEventListener("keydown", debounce(handleKeydown, 400));
 
     //透過List Bar方式抓data
     const leftButton = document.querySelector('.carousel__button--left');
@@ -136,7 +139,7 @@ document.addEventListener("DOMContentLoaded", async () => {    //loadNextPageは
         updateCarousel(1);
     })
 
-    carouselTrack.addEventListener("click", async(event) => {
+    async function showOnSearchBox(event) {
         if (event.target.classList.contains("carousel__item")) {
             keyword = event.target.textContent;
             inputAttrQryS.value = keyword;
@@ -144,7 +147,8 @@ document.addEventListener("DOMContentLoaded", async () => {    //loadNextPageは
             tabsQryS.textContent = "";
             page = await loadNextPage(page, keyword);
         }
-    })
+    }
+    carouselTrack.addEventListener("click", debounce(showOnSearchBox, 400));
 })
 
 

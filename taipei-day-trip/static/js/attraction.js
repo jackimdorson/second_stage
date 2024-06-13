@@ -51,10 +51,16 @@ const nextButton = document.querySelector('.carousel__button--right');
 const navQryS = document.querySelector('.carousel__nav');
 let slides = [];
 let indicators = [];
+let currentIndex = 0;
 
 const initializeCarousel = () => {
     slides = Array.from(carouselTrackQryS.children);
-    let currentIndex = 0;
+    createIndicators();
+    attachEventListeners();
+    updateCarousel();
+}
+
+const createIndicators = () => {
     for (let index = 0; index < slides.length; index++) {  //indicator(...)の作成
         const indicator = createElmAndClass("div", "carousel__indicator");
         if(index === 0){
@@ -68,33 +74,44 @@ const initializeCarousel = () => {
             updateCarousel();
         })
     }
+}
 
-    const updateCarousel = () => {     //transformはGPUで処理する為、scrollByより良い
-        const slideWidth = slides[0].getBoundingClientRect().width;
-        carouselTrackQryS.style.transform = `translateX(-${slideWidth * currentIndex}px)`;
-        updateIndicators();
-    };
+const updateCarousel = () => {     //transformはGPUで処理する為、scrollByより良い
+    const slideWidth = slides[0].getBoundingClientRect().width;
+    carouselTrackQryS.style.transform = `translateX(-${slideWidth * currentIndex}px)`;
+    updateIndicators();
+};
 
-    const updateIndicators = () => {
-        for (let index = 0; index < indicators.length; index++) {
-            const indicator = indicators[index];
-            indicator.classList.toggle("carousel__indicator--active", index === currentIndex);
-        }
+const updateIndicators = () => {
+    for (let index = 0; index < indicators.length; index++) {
+        const indicator = indicators[index];
+        indicator.classList.toggle("carousel__indicator--active", index === currentIndex);
     }
+}
 
-    prevButton.addEventListener('click', () => {
+const attachEventListeners = () => {
+    prevButton.addEventListener("click", () => {
         if (currentIndex > 0) {
             currentIndex--;
             updateCarousel();
         }
-    });
+    })
 
-    nextButton.addEventListener('click', () => {
+    nextButton.addEventListener("click", () => {
         if (currentIndex < slides.length - 1) {
             currentIndex++;
             updateCarousel();
         }
+    })
+    const resizeObserver = new ResizeObserver(() => {
+        carouselTrackQryS.classList.add("carousel__track--disable");
+        updateCarousel();
+        // 次のリフレッシュフレームでtransitionを元に戻す
+        requestAnimationFrame(() => {
+            carouselTrackQryS.classList.remove("carousel__track--disable");
+        });
     });
+    resizeObserver.observe(carouselTrackQryS);
 };
 
 

@@ -105,6 +105,10 @@ input[type="date"] {
     &__track {
         display: flex;
         transition: transform 0.3s ease-in-out;
+
+        &--disable {
+            transition: none;
+        }
     }
 
     &__slide {
