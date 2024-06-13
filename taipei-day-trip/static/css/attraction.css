@@ -206,7 +206,7 @@ input[type=radio]:checked {
 }
 
 input[type=date] {
-  background: url("/static/images/icons/icon-calendar.webp") no-repeat center right 10px white;
+  background: url("/static/images/icons/calendar.webp") no-repeat center right 10px white;
   width: 165px;
   height: 35px;
   padding: 0 10px;
