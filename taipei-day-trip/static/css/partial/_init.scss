@@ -44,6 +44,7 @@ body {
     & button {
         background: none;
         border: none;
+        padding: unset;
     }
 }   // ⬆️ original css_reset
 
@@ -62,9 +63,9 @@ body {     //コンテンツが少ない時でもfooterを一番下に置くた�
     }
 }
 
-[data-theme="dark"]{
-    background-color: $black;
-    color: $white;
+
+.darkmode-btn {
+    display: none;
 }
 
 .header {
@@ -102,6 +103,45 @@ body {     //コンテンツが少ない時でもfooterを一番下に置くた�
     justify-content: center;
     background-color: $gray757;
     color: $white;
+}
+
+@media (min-width: 500px) {
+    [data-theme="dark"] {
+        .body {
+            & .header, & .main, & .footer {
+                background-color: $black;
+                & div {
+                    color: $white;
+                }
+                & a {
+                    color: $cyan448;
+                }
+            }
+            div {
+                &[class="tabs__name"]{
+                    background-color: rgba(255, 255, 255, 0.8);
+                    color: $gray757;
+                }
+                &[class="schedule"]{
+                    background-color: $gray666;
+                }
+            }
+            li[class="carousel__item"]:hover {
+                color: $gray757;
+            }
+        }
+    }
+    .darkmode-btn {
+        display: block;
+        width: 32px;
+        height: 32px;
+        margin: 10px;
+
+        & > img {
+            width: 100%;
+            height: 100%;
+        }
+    }
 }
 
 

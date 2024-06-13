@@ -99,7 +99,7 @@
     &__track {
         display: flex;
         transition: transform 0.3s ease-in-out;
-        overflow-x: scroll;
+        overflow: hidden;   //hiddenとすることで下部スクロールを削除。表示するには右記が必要overflow-x: scroll;
     }
     &__item {
         min-width: fit-content;

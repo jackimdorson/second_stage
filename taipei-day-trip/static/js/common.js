@@ -33,3 +33,23 @@ export function debounce(func, wait) {   //関数とwait時間を受け取り、
         timeout = setTimeout(() => func.apply(this, args), wait);  //新しいタイマーを設定し、ウェイト時間後に関数を実行
     }
 }
+
+export function enableDarkMode() {
+    const btnDark = document.querySelector(".darkmode-btn");
+    const imgElm = document.createElement("img");
+    imgElm.alt = "theme-mode";
+    btnDark.appendChild(imgElm);
+
+    const updateImage = (mode) => {
+        imgElm.src = mode === "dark" ? "/static/images/icons/icon-dark-mode.webp" : "/static/images/icons/icon-light-mode.webp";
+    }
+
+    btnDark.addEventListener("click", () => {
+        const modeNow = document.documentElement.getAttribute("data-theme");
+        const updateMode = modeNow === "dark" ? "light" : "dark";     //trueならlightに、falseならdarkに
+        document.documentElement.setAttribute("data-theme", updateMode);
+        updateImage(updateMode);
+    })
+    const initialMode = document.documentElement.getAttribute("data-theme");
+    updateImage(initialMode);
+}
