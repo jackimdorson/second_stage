@@ -149,7 +149,7 @@ body img {
 
 .hero {
   color: white;
-  background-image: url("/static/images/bg/hero-mobile.webp");
+  background-image: url("/static/images/bg/hero-mobile360x320.webp");
   background-size: cover;
   background-position: center;
   display: flex;
@@ -286,7 +286,7 @@ body img {
 
 @media (min-width: 500px) {
   .hero {
-    background-image: url("/static/images/bg/hero-desktop.webp");
+    background-image: url("/static/images/bg/hero-desktop1920x320.webp");
     background-size: cover;
   }
   .hero__content {

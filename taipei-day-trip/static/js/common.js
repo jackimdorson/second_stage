@@ -41,7 +41,7 @@ export function enableDarkMode() {
     btnDark.appendChild(imgElm);
 
     const updateImage = (mode) => {
-        imgElm.src = mode === "dark" ? "/static/images/icons/mode-dark.webp" : "/static/images/icons/mode-light.webp";
+        imgElm.src = mode === "dark" ? "/static/images/icons/mode-dark32x32.webp" : "/static/images/icons/mode-light32x32.webp";
     }
 
     btnDark.addEventListener("click", () => {
@@ -58,7 +58,7 @@ export function jump2Top() {
     const toTopBtn = document.querySelector(".jump2top-btn");
     const imgElm = document.createElement("img");
     imgElm.alt = "jump-btn";
-    imgElm.src = "/static/images/icons/to-top.webp";
+    imgElm.src = "/static/images/icons/to-top96x96.webp";
     toTopBtn.appendChild(imgElm);
 
     let isScrolling;

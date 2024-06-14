@@ -3,7 +3,7 @@
 
 .hero {
     color: init.$white;
-    background-image: url("/static/images/bg/hero-mobile.webp");    //png対比25%程容量が小さく透明性もok
+    background-image: url("/static/images/bg/hero-mobile360x320.webp");    //png対比25%程容量が小さく透明性もok
     background-size: cover;      //画像を中央にする為に必要
     background-position: center;      //画像を中央にする為に必要
     @include init.flex-center2;
@@ -145,7 +145,7 @@
 
 @media (min-width: 500px) {
     .hero {
-        background-image: url("/static/images/bg/hero-desktop.webp");
+        background-image: url("/static/images/bg/hero-desktop1920x320.webp");
         background-size: cover;
 
         &__content {
