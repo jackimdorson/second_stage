@@ -13,7 +13,7 @@ def get_cursor(db_conn):
         except Exception as e:     #__exit__メソッドとして機能
             db_conn.rollback()
             raise Exception(f"yield停止中, 內部出問題") from e
-        else:         #tryブロック内のコードは、例外を発生させなかった場合にのみ実行される。tryブロック内に多くのコードを含めると、意図しない例外が捕捉される可能性がある。
+        else:      #tryの処理が完了した時のみ実行、exceptでは実行されない
             db_conn.commit()
 
 

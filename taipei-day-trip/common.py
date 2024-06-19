@@ -31,7 +31,7 @@ app = FastAPI()
 app.mount("/static", StaticFiles(directory="static"), name="static")
 load_dotenv()   # 環境変数の読み込み
 
-
+private_key = os.getenv("PRIVATE_KEY").replace("\\n", "\n")   #秘密鍵を取得し、改行を適切に処理(秘密鍵に改行がある為)
 
 class LoggerCritical(Exception):     #オリジナルの例外
     def __init__(self, message="重大Error"):
@@ -42,7 +42,7 @@ class LoggerCritical(Exception):     #オリジナルの例外
 @app.exception_handler(HTTPException)   #内部＋外部(詳細)Error, クライアントに詳細を返す際に使用
 async def http_exception_handler(request: Request, exc: HTTPException):
     logger.error(f"http_exc===={exc.detail}===={exc.status_code}")
-    return JSONResponse(
+    return JSONResponse(     #既にstatus_code = 400とdetailを返しているため不要
         content = exc.detail
     )
 
