@@ -18,11 +18,13 @@
   <header class="header">
     <section class="header__content">
       <h2 class="header__title"><a href="/">台北一日遊</a></h2>
-      <nav class="header__nav">
+      <nav class="header__nav nav">
         <button class="darkmode-btn">
         </button>
         <a href="#">預定行程</a>
-        <a href="#">登入/註冊</a>
+        <a class="nav__signpop">登入/註冊</a>
+        <div class="overlay"></div>
+        <div class="popup"></div>
       </nav>
     </section>
   </header>
@@ -32,10 +34,11 @@
         <h1 class="hero__title">輕鬆享受台北一日悠閒</h1>
         <p class="hero__text">探索每個角落，體驗城市的深度旅遊行程</p>
         <div class="search-box">
-          <label class="search-box__label">
-            <input type="text" class="search-box__input" placeholder="輸入景點名稱查詢">
-            <img class="search-box__icon" loading="lazy" src="/static/images/icons/search30x30.webp" alt="icon-search">
-          </label>
+          <label class="search-box__label" for="search-input"></label>
+          <input type="text" class="search-box__input" id="search-input" placeholder="輸入景點名稱查詢">
+          <button class="search-box__icon">
+            <img src="/static/images/icons/search30x30.webp" alt="icon-search">
+          </button>
         </div>
       </div>
     </section>
@@ -52,7 +55,7 @@
           <img src="/static/images/icons/arrow-right32x32.webp" alt="icon-arrow-right">
         </button>
       </section>
-      <section class="tabs">     <!-- 独立する為section化可能 -->
+      <section class="cards">     <!-- 独立する為section化可能 -->
       </section>
     </section>
     <button class="jump2top-btn"></button>
@@ -80,3 +83,5 @@ link tag = blocking, CSSファイルはレンダリングをブロック
     <head>タグ内に配置されたCSSは、ページのレンダリングをブロックする。初期表示に必要なcssはここ。
     <body>タグの後に配置されたCSSは、ページのレンダリングをブロックしない。初期表示に不要なcssはここ。
 3.DOMツリーとCSSOMツリーの結合 (Render Tree Construction) -->
+
+

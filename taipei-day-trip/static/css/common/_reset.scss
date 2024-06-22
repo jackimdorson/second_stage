@@ -1,0 +1,148 @@
+// _reset = ブラウザreset + 全サイト使い回せる『 共通構造(変数+mixin) 』を格納
+
+$black: black;
+$white: white;
+$gray666: #666666;  // main
+$gray757: #757575;  // footer
+
+@mixin flex-center2() {
+    display: flex;
+    align-items: center;
+}
+
+@mixin flex-center3() {
+    @include flex-center2;
+    justify-content: center;
+}
+
+@mixin max-width-center() {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+@mixin bg-img() {
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+// ⬇️ original css_reset
+a {
+    text-decoration: none;
+    color: unset;
+}
+
+p, ul, hr, h1, h2, h3, h4, h5 {        //ol, blockquote, figure也有
+    margin-block: unset
+}
+
+ul {
+    list-style: none;
+    padding-inline-start: unset;
+}
+
+hr {
+    margin: unset;
+    border: none;
+}
+
+label, input[type="radio"]  {
+    cursor: pointer;
+}
+
+input {
+    border: none;
+}
+
+button {
+    background: none;
+    border: none;
+    padding: unset;  //unsetは親要素のを継承,noneがあればnoneを使う
+    cursor: pointer;
+}
+
+img {
+    object-fit: cover;
+    width: 100%;
+    height: 100%;
+}
+
+.body {   //コンテンツが少ない時でもfooterを一番下に置くための記述(flexの方法)
+    margin: 0;  //ブラウザのdefaultで生じるbodyの外にある余白を消す
+    display: flex;
+    flex-direction: column;
+}
+
+.main {      //footerをスクロールした際に表示させる方法
+    min-height: 100vh;
+    padding: 54px 0;     //headerのfixed分下に移動
+}
+
+.header {
+    width: 100%;
+    background-color: $white;  //設定しないと透明になる
+    position: fixed;
+    z-index: 100;
+
+    &__content {
+        height: 54px;
+        @include max-width-center;
+        @include flex-center2;
+        justify-content: space-between;
+    }
+
+    &__title{
+        padding-left: 10px;
+    }
+
+    &__nav {
+        @include flex-center2;
+        gap: 20px;
+        padding-right: 10px;
+        height: 100%;
+        color: $gray666;
+    }
+}
+
+.footer {
+    width: 100%;
+    height: 104px;
+    margin-top: auto;
+    @include flex-center3;
+    background-color: $gray757;
+    color: $white;
+}
+
+.jump2top-btn {
+    width: 60px;
+    height: 60px;
+    position: fixed;
+    bottom: 3%;
+    right: 4%;
+    display: none;
+    background-color: $gray757;
+    border-radius: 50%;
+    opacity: 60%;
+}
+
+@media (min-width: 500px) {
+    [data-theme="dark"] {
+        .body {
+            background-color: $black;
+
+            & .header, & .main, & .footer {
+                background-color: $black;
+
+                & div {
+                    color: $white;
+                }
+            }
+
+            & .jump2top-btn {
+                width: 80px;
+                height: 80px;
+                bottom: 8%;
+            }
+        }
+    }
+}

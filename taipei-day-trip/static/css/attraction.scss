@@ -1,8 +1,9 @@
-@use "partial/init" as init;
-@use "partial/same" as same;
+@use "common/reset" as *;
+@use "common/init" as init;   //先頭の_と.scssの記述不要
+@use "compo/signup" as signup;
 
-body {
-    color: init.$gray666;
+.body {
+    color: $gray666;
 }
 
 .attraction {
@@ -14,11 +15,13 @@ body {
         gap: 15px;
         padding: 0 10px;
     }
+
     &__title {
         font-size: 24px;
         font-weight: 700;
     }
 }
+
 .schedule {
     background-color: init.$grayE8E;
     padding: 20px;
@@ -31,43 +34,44 @@ body {
     }
 
     &__time {
-        @include init.flex-center2;
+        @include flex-center2;
 
         &--title {
             font-weight: 700;
         }
+
         &--option {
-            @include init.flex-center2;
+            @include flex-center2;
             padding: 0 10px;
         }
     }
-
-
 }
+
 input[type="radio"] {
     margin: 0 3px;
     appearance: none;
-    background-color: init.$white;
+    background-color: $white;
     width: 22px;
     height: 22px;
     border-radius:50%;
     padding: 10px;
-    cursor: pointer;
+    // cursor: pointer;
 
     &:checked {
         background-color: init.$cyan448;
-        box-shadow: inset 0 0 0 2px init.$white; //チェック時に小さい丸を表示
+        box-shadow: inset 0 0 0 2px $white; //チェック時に小さい丸を表示
     }
 }
 
 input[type="date"] {
-    background: url("/static/images/icons/calendar30x30.webp") no-repeat center right 10px init.$white;
+    background: url("/static/images/icons/calendar24x24.webp") no-repeat center right 10px $white;
     width: 165px;
     height: 35px;
     padding: 0 10px;
 
     &::-webkit-calendar-picker-indicator {   //預設 input[type="date"]的 iconを透明にする方法
         background: transparent;
+        cursor: pointer;
     }
 }
 
@@ -79,7 +83,6 @@ input[type="date"] {
         position: absolute;
         top: 50%;
         transform: translateY(-50%);
-        cursor: pointer;
         z-index: 1;
 
         &--left {
@@ -116,38 +119,39 @@ input[type="date"] {
         max-height: 350px;
     }
 
-    &__img {
-        width: 100%;
-        min-height: 350px;
-    }
     &__nav {
-        @include init.flex-center2;
+        @include flex-center2;
         position: absolute;
         bottom: 5px;
         left: 50%;
         transform: translate(-50%, -50%);
         opacity: 75%;
     }
+
     &__indicator {
         width: 12px;
         height: 12px;
-        background-color: init.$white;
+        background-color: $white;
         border-radius: 50%;
         margin: 0 5px;
         cursor: pointer;
 
         &--active {
-            background-color: init.$black;
-            border: 1px solid init.$white;
+            background-color: $black;
+            border: 1px solid $white;
         }
     }
 }
 
 .button {
+    width: 154px;
+    height: 36px;
     font-size: 19px;
-    @include init.flex-center2;
+    @include flex-center2;
     color: white;
-    font-weight: 400;
+    border-radius: 5px;
+    background-color: init.$cyan448;
+    padding: 10px 20px;
 }
 
 .info {
@@ -163,19 +167,15 @@ input[type="date"] {
 .hr {
     height: 1px;
     background-color: init.$grayE8E;
-    margin: unset;
-    border: none;
 
     &.bottom__header {
         display: none;
     }
     &.bottom__attraction {
-    width: calc(100% - 20px);
-    margin: 0 auto;
+        width: calc(100% - 20px);
+        margin: 0 auto;
     }
 }
-
-
 
 @media (min-width: 700px) {     //for常常pc視窗並排的User, 像自己非常需要
     .attraction {
@@ -184,22 +184,25 @@ input[type="date"] {
         grid-template-columns: 48% 51%;
         gap: 40px 10px;
     }
+
     .carousel {
         &__slide {
             max-height: 400px;
         }
+
         &__img {
             border-radius: 5px;
             height: 400px;
         }
     }
+
     .hr {
         &.bottom__header {
             margin-bottom: 40px;
             display: block;
             width: 100%;
-            background-color: init.$grayE8E;
         }
+
         &.bottom__attraction {
             grid-column: span 2;
         }
@@ -207,23 +210,11 @@ input[type="date"] {
 }
 
 @media (min-width: 1200px) {
-    main {
-        @include init.max-width-center;
-
+    .main {
+        @include max-width-center;
     }
+
     .attraction {
-        height: 400px;
-        padding: 40px 15px;
         grid-template-columns: 540px 600px;
     }
-    .carousel {
-        &__slide {
-            max-height: 400px;
-        }
-        &__img {
-            border-radius: 5px;
-            height: 400px;
-        }
-    }
-
 }

@@ -1,0 +1,79 @@
+@use "../common/reset" as *;
+@use "../common/init" as init;
+
+.cards {
+    display: grid;
+    gap: 30px;
+    padding: 15px;
+    box-sizing: border-box;
+    cursor: pointer;
+
+    &__link {
+        height: 280px;
+        position: relative;
+        border: 1px solid init.$grayE8E;
+        border-radius: 5px;
+
+        &:hover {
+            opacity: 0.9;
+        }
+    }
+
+    &__img {
+        height: calc(100% - 45px);
+    }
+
+    &__name {
+        width: 100%;
+        height: 40px;
+        position: absolute;
+        bottom: 45px;
+        background-color: rgba(0, 0, 0, 0.6);   //指定#000000 opacity60%
+        color: $white;
+        padding: 10px;
+        box-sizing: border-box;
+        ///...3つで1組
+        white-space: nowrap;    //1行にする
+        overflow: hidden;
+        text-overflow: ellipsis;   //...にする
+        line-height: 20px;    // elipsisで高さに問題が生じた際に使用
+    }
+
+    &__info {
+        width: 100%;
+        height: 45px;
+        position: absolute;
+        bottom: 0;
+        @include flex-center2;
+        justify-content: space-between;
+        color: $gray757;
+        padding: 10px;
+        box-sizing: border-box;
+    }
+}
+
+@media (min-width: 500px) {
+    .cards {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (min-width: 700px) {     //for常常pc視窗並排的User, 像自己非常需要
+    .cards {
+        gap: 18px;
+        grid-template-columns: repeat(3, 1fr);
+    }
+    .search-box {
+        width: 460px;
+    }
+}
+
+@media (min-width: 1200px) {
+    .cards {
+        grid-template-columns: repeat(4, 1fr);   //grid, 不像flex無法至中
+
+        &__link {
+            height: 270px;
+        }
+    }
+}

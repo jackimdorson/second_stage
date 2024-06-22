@@ -323,17 +323,15 @@ async def create_user(user: UserCreateRequest):
 		responses = {
 			200: {"model": UserAuthResponse, "description": "已登入的會員資料, null 表示未登入"}
 		})
-async def get_user_auth(token: str = Header(None)): #Header＝RequestHeaderからparameter(=token)を取得, なければNoneを返す
-	if token is None:
+async def get_user_auth(authorization: str = Header(None)): #Header＝RequestHeaderからautho..を取得(defaultでは全て小文字に変換される故注意)なければNoneを返す
+	if authorization is None:
 		return JSONResponse(content={"data": None}, headers={"Content-Type": "application/json; charset=utf-8"})
+	token = authorization.split(" ")[1]  #auth...の値は：Bearer tokenとなっている故、spaceでsplitし、tokenのみ取得(Bearer除去)
 	try:
 		with open("static/taipei_day_trip_public_key.pem", "r") as file:
 			public_key = file.read()
 		decoded = jwt.decode(token, public_key, algorithms=["RS256"])
-		print(decoded)
 		user_id, user_name, email, iat, exp = decoded.values()
-		print(email)
-		print("==2:decoded==")
 		return JSONResponse(content={"data": {"id": user_id, "name": user_name, "email": email}}, headers={"Content-Type": "application/json; charset=utf-8"})
 	except jwt.ExpiredSignatureError:  #期限切れの際にcatch
 		print("超過有效期限")
@@ -360,13 +358,14 @@ async def update_user_auth(auth: UserAuthRequest):
 					FROM users
 				    WHERE BINARY email = %s
 				""", (auth.email,))
-				jwt_data = cursor.fetchone()
-				print("=====123=====")
-				id, name, email, password = jwt_data.values()
 			except Exception as e:
 				raise Exception("SQL出問題:發生地=def update_user_auth-1") from e
-			if not jwt_data or not pwd_context.verify(auth.password, password):   #pwd_context.hashの検証にはverifyメソッドを使う、第一に普通のpsw,第二にhash済み
-				raise HTTPException(status_code=400, detail={"error": True, "message": "帳號或密碼輸入錯誤"})
+			jwt_data = cursor.fetchone()
+			if not jwt_data:
+				raise HTTPException(status_code=400, detail={"error": True, "message": "帳號輸入錯誤"})
+			id, name, email, password = jwt_data.values()
+			if not pwd_context.verify(auth.password, password):  #pwd_context.hashの検証にはverifyメソッドを使う、第一に普通のpsw,第二にhash済み
+				raise HTTPException(status_code=400, detail={"error": True, "message": "密碼輸入錯誤"})
 			payload = {    				# jwtの生成
 				"user_id": id,
 				"user_name": name,
@@ -375,4 +374,4 @@ async def update_user_auth(auth: UserAuthRequest):
 				"exp": datetime.datetime.utcnow() + datetime.timedelta(days=7)
 			}
 			token = jwt.encode(payload, private_key, algorithm="RS256")
-			return JSONResponse(content={"data": token}, headers={"Content-Type": "application/json; charset=utf-8"})
+			return JSONResponse(content={"token": token}, headers={"Content-Type": "application/json; charset=utf-8"})

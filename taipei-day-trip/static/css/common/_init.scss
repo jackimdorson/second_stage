@@ -1,0 +1,50 @@
+// _init = projectで使われる『 個別の(変数＋mixin) 』を格納
+@use "reset" as *;
+
+$cyan448: #448899;  // main
+$cyan66A: #66AABB;
+$cyanAAD: #AADDEE;
+$grayE8E: #E8E8E8;
+$grayF8F: #F8F8F8;
+
+.body {
+    font-family: "Noto Sans TC";
+}
+
+.header__title {
+    font-size: 30px;
+    color: $cyan448;
+}
+
+.darkmode-btn {
+    display: none;
+}
+
+@media (min-width: 500px) {
+    .darkmode-btn {
+        display: block;
+        width: 32px;
+        height: 32px;
+    }
+    [data-theme="dark"] {
+        .body {
+            & .header, & .main, & .footer {
+                & a {
+                    color: $cyan448;
+                }
+            }
+            div {
+                &[class="cards__name"]{
+                    background-color: rgba(255, 255, 255, 0.8);
+                    color: $gray757;
+                }
+                &[class="schedule"]{
+                    background-color: $gray666;
+                }
+            }
+            li[class="carousel__item"]:hover {
+                color: $gray757;
+            }
+        }
+    }
+}
