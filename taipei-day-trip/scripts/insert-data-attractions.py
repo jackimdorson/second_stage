@@ -1,11 +1,11 @@
 # JSONデータの読み込みとMySQLへの保存
-from common import connect_db
+import config.db_config as mydbconfig
 import json    #day-trip.jsonからのデータ取得必要
 import re
-from contextlib import contextmanager    #contextmanager=リソースの取得と解放を自動的に行うための仕組み(file操作,db接続,network)__enter__と__exit__という2つのメソッドを持つオブジェクト
+import contextlib  #contextmanager=リソースの取得と解放を自動的に行うための仕組み(file操作,db接続,network)__enter__と__exit__という2つのメソッドを持つオブジェクト
 
 
-@contextmanager                          #関数をコンテキストマネージャとして機能させるために使用
+@contextlib.contextmanager   #関数をコンテキストマネージャとして機能させるために使用
 def get_cursor(db_conn):
     with db_conn.cursor() as cursor:     #リソースの取得__enter__メソッドとして機能
         try:
@@ -15,7 +15,6 @@ def get_cursor(db_conn):
             raise Exception(f"yield停止中, 內部出問題") from e
         else:      #tryの処理が完了した時のみ実行、exceptでは実行されない
             db_conn.commit()
-
 
 
 def enable_proper_auto_increment(cursor, table, column, value):   #dbのauto_incrementはinsert ignore等insertと言う行為があればカウントされる為、insertの分岐が必要
@@ -31,7 +30,6 @@ def enable_proper_auto_increment(cursor, table, column, value):   #dbのauto_inc
             raise Exception("SQL出問題:發生地=def enable_proper-2") from e
         return cursor.lastrowid   #直前のINSERTまたはUPDATEステートメントによって生成されたAUTO_INCREMENT列の値を取得。直前がselectでは使えない。
     return row_id[0]
-
 
 
 def insert_data(db_conn, json_dict):
@@ -67,7 +65,6 @@ def insert_data(db_conn, json_dict):
                 raise Exception("SQL出問題:發生地=def insert_data-2") from e
 
 
-
 def data_exists(db_conn):
     with db_conn.cursor() as cursor:
         try:
@@ -80,9 +77,8 @@ def data_exists(db_conn):
         return False
 
 
-
 def main():
-    with connect_db() as db_conn:   #在common.py有處理try, catch
+    with mydbconfig.connect_db() as db_conn:   #在common.py有處理try, catch
         if data_exists(db_conn):
             raise Exception("db已有資料,無法再加:發生地=def main-1")
         try:
