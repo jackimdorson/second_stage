@@ -1,88 +1,38 @@
-@use "partial/init" as init;   //先頭の_と.scssの記述不要
-@use "partial/same" as same;
+@use "common/reset" as *;
+@use "common/init" as init;   //先頭の_と.scssの記述不要
+@use "compo/signup" as signup; //indexでsignupのsccを当てるのに必要な記述
+@use "compo/cards" as cards;
 
 .hero {
-    color: init.$white;
-    background-image: url("/static/images/bg/bg-hero-mobile.webp");    //png対比25%程容量が小さく透明性もok
-    background-size: cover;      //画像を中央にする為に必要
-    background-position: center;      //画像を中央にする為に必要
-    @include init.flex-center2;
     height: 320px;
+    color: $white;
+    background-image: url("/static/images/bg/hero-mobile360x320.webp");  //png対比25%程容量が小さく透明性もok
+    @include bg-img;
+    @include flex-center2;
 
     &__content {
-        padding: 0 20px;
         width: 100%;
+        @include max-width-center;
+        padding: 0 20px;
         color: init.$grayF8F;
         display: grid;
         gap: 20px;
         box-sizing: border-box;
     }
+
     &__title {
-        font-size: 28px;      //h1指定font大小
+        font-size: 28px;
     }
+
     &__text {
         font-size: 16px;
     }
 }
 
-
-.tabs {
-    display: grid;
-    gap: 30px;
-    padding: 15px;
-    box-sizing: border-box;
-
-    &__link {
-        height: 280px;
-        position: relative;
-        border: 1px solid init.$grayE8E;
-        border-radius: 5px;
-
-        &:hover {
-            opacity: 0.9;
-        }
-    }
-    &__img {
-        width: 100%;
-        height: calc(100% - 45px);
-        border-radius: 5px 5px 0 0;
-    }
-    &__name {
-        position: absolute;
-        bottom: 45px;
-        height: 40px;
-        width: 100%;
-        background-color: rgba(0, 0, 0, 0.6);   //指定#000000 opacity60%
-        color: init.$white;
-        padding: 10px;
-        box-sizing: border-box;
-        ///...3つで1組
-        white-space: nowrap;    //1行にする
-        overflow: hidden;
-        text-overflow: ellipsis;   //...にする
-        line-height: 20px;    // elipsisで高さに問題が生じた際に使用
-    }
-    &__info {
-        position: absolute;
-        bottom: 0;
-        height: 45px;
-        width: 100%;
-        @include init.flex-center2;
-        justify-content: space-between;
-        color: init.$gray757;
-        padding: 10px;
-        box-sizing: border-box;
-    }
-}
-
-
 .carousel {
     padding: 0 15px 20px;
-    box-sizing: border-box;
-    @include init.flex-center2;
-    @include init.max-width-center;
-    color: init.$gray666;
-    cursor: pointer;
+    @include flex-center2;
+    color: $gray666;
 
     &__button {
         opacity: 0.5;
@@ -91,102 +41,74 @@
             opacity: 1;
         }
     }
+
     &__track-container {
         overflow: hidden;
         margin: 13px 10px;
         width: 100%;
     }
+
     &__track {
         display: flex;
         transition: transform 0.3s ease-in-out;
         overflow: hidden;   //hiddenとすることで下部スクロールを削除。表示するには右記が必要overflow-x: scroll;
+        cursor: pointer;
+        position: relative;
+        z-index: 5;
     }
+
     &__item {
         min-width: fit-content;
         padding: 0 15px;
         text-align: center;
 
         &:hover {
-            color: init.$black;
+            color: $black;
         }
     }
 }
 
 .search-box {
     width: 285px;
+    height: 46px;
     border-radius: 5px;
-    background-color: init.$cyan448;
+    @include flex-center2;
 
-    &__label {
-        @include init.flex-center2;
-    }
     &__input {
-        width: 225px;
-        height: 46px;
-        box-sizing: border-box;
+        width: calc(100% - 90px);
         padding: 15px;
-        border-radius: 5px 0 0 5px;
-
+        border-top-left-radius: 5px;
+        border-bottom-left-radius: 5px;
         &::placeholder {
-            color: init.$gray757;
+            color: $gray757;
         }
     }
+
     &__icon {
-        margin: 0 auto;
+        width: 60px;
+        height: 100%;
+        padding: 8px 15px;
+        border-top-right-radius: 5px;
+        border-bottom-right-radius: 5px;
+        background-color: init.$cyan448;
     }
 }
 
-
 .container {
-    padding: 40px 0;   //指定值
+    padding: 40px 0;
+    @include max-width-center;
 }
-
-
 
 @media (min-width: 500px) {
     .hero {
-        background-image: url("/static/images/bg/bg-hero-desktop.webp");
-        background-size: cover;
-
-        &__content {
-            @include init.max-width-center;
-        }
+        background-image: url("/static/images/bg/hero-desktop1920x320.webp");
+        @include bg-img;
     }
-    .tabs {
-        @include init.max-width-center;
-        grid-template-columns: repeat(2, 1fr);
-    }
-}
 
-
-@media (min-width: 700px) {     //for常常pc視窗並排的User, 像自己非常需要
-    .tabs {
-        @include init.max-width-center;
-        gap: 18px;
-        grid-template-columns: repeat(3, 1fr);
-    }
     .search-box {
         width: 460px;
-
-        &__input {
-            width: 400px;
-        }
     }
 }
-
-
-@media (min-width: 1200px) {
-    .tabs {
-        @include init.max-width-center;
-        grid-template-columns: repeat(4, 1fr);   //grid, 不像flex無法至中
-
-        &__link {
-            height: 270px;
-        }
-    }
-}
-
-
 
 
 

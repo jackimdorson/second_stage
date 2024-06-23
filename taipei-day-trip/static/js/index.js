@@ -1,7 +1,7 @@
 "use strict"
-import { fetchResponseJson, preloadImage, createElmAndClass, debounce, enableDarkMode } from "./common.js";
+import { fetchResponseJson, preloadImage, createElmAndClass, debounce, enableDarkMode, jump2Top, checkUserStatusByjwt } from "./common.js";
 
-const tabsQryS = document.querySelector(".tabs");
+const cardsQryS = document.querySelector(".cards");
 const inputAttrQryS = document.querySelector(".search-box__input");
 const clickAttrQryS = document.querySelector(".search-box__icon");
 const carouselTrack = document.querySelector('.carousel__track');
@@ -16,23 +16,23 @@ function makeUrl(pageArg, keywordArg) {
 }
 
 function createParentsElmDiv(attraction) {
-    const parentElmDiv = createElmAndClass("a", "tabs__link");
+    const parentElmDiv = createElmAndClass("a", "cards__link");
     parentElmDiv.href = `/attraction/${attraction.id}`;
 
-    const childElmImg = createElmAndClass("img", "tabs__img");
+    const childElmImg = createElmAndClass("img", "cards__img");
     childElmImg.src = attraction.images[0];
     childElmImg.alt = attraction.name;
     childElmImg.loading = "lazy";
     parentElmDiv.appendChild(childElmImg);   //appendChildの頻度の多くないところでは、影響が少ない為fragment経由でなくても良い
 
-    const childElmDivName = createElmAndClass("div", "tabs__name");
+    const childElmDivName = createElmAndClass("div", "cards__name");
     childElmDivName.textContent = attraction.name;
     parentElmDiv.appendChild(childElmDivName);
 
-    const childElmDivInfo = createElmAndClass("div", "tabs__info");
-    const childElmDivMrt = createElmAndClass("div", "tabs__mrt");
+    const childElmDivInfo = createElmAndClass("div", "cards__info");
+    const childElmDivMrt = createElmAndClass("div", "cards__mrt");
     childElmDivMrt.textContent = attraction.mrt;
-    const childElmDivCategory = createElmAndClass("div", "tabs__category");
+    const childElmDivCategory = createElmAndClass("div", "cards__category");
     childElmDivCategory.textContent = attraction.category;
     childElmDivInfo.appendChild(childElmDivCategory);
     childElmDivInfo.appendChild(childElmDivMrt);
@@ -45,7 +45,8 @@ async function loadNextPage(pageArg, keywordArg) {   //非同期関数のreturn�
     const url = makeUrl(pageArg, keywordArg);
     const jsonData = await fetchResponseJson(url);
     if (!jsonData.data) {
-        tabsQryS.textContent = jsonData.message;
+        cardsQryS.textContent = jsonData.message;
+        cardsQryS.classList.add("cards--nodata");
         return null;
     }
     const fragment = document.createDocumentFragment();  //DocumentFragmentを使用してDOM操作を効率化。直接appendChildを使用すると12回の再描画が発生しますが、DocumentFragmentを使用すると1回の再描画で済む。
@@ -54,12 +55,13 @@ async function loadNextPage(pageArg, keywordArg) {   //非同期関数のreturn�
         const parentElmDiv = createParentsElmDiv(attraction);
         fragment.appendChild(parentElmDiv);
     }
-    tabsQryS.appendChild(fragment);   //appendChildは再描画しないといけない為、fragment経由で一度にDOMに追加
+    cardsQryS.appendChild(fragment);   //appendChildは再描画しないといけない為、fragment経由で一度にDOMに追加
     return jsonData.nextPage;
 }
 
 
 document.addEventListener("DOMContentLoaded", async () => {    //loadNextPageは非同期関数で、関数は常にPromiseを返す為、内部でawaitしても、再度awaitする必要あり。
+    checkUserStatusByjwt();   //顯示畫面就馬上檢查UserStatus
     let page = 0;
     let keyword = null;
     page = await loadNextPage(page, keyword);   //0ページ目の読み込み(homepage入った時の)
@@ -86,7 +88,7 @@ document.addEventListener("DOMContentLoaded", async () => {    //loadNextPageは
     async function handleClick() {
         page = 0;
         keyword = inputAttrQryS.value;
-        tabsQryS.textContent = "";
+        cardsQryS.textContent = "";
         inputAttrQryS.value = "";
         page = await loadNextPage(page, keyword);
     }
@@ -144,12 +146,13 @@ document.addEventListener("DOMContentLoaded", async () => {    //loadNextPageは
             keyword = event.target.textContent;
             inputAttrQryS.value = keyword;
             page = 0;
-            tabsQryS.textContent = "";
+            cardsQryS.textContent = "";
             page = await loadNextPage(page, keyword);
         }
     }
     carouselTrack.addEventListener("click", debounce(showOnSearchBox, 400));
     enableDarkMode();
+    jump2Top();
 })
 
 

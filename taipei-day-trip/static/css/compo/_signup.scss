@@ -1,0 +1,98 @@
+@use "../common/reset" as *;
+@use "../common/init" as init;
+
+.popup {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #fff;
+    z-index: 1000;
+
+    &.active{
+        display: block;
+        width: 340px;
+        box-sizing: border-box;
+        text-align: center;
+        border-radius: 6px;
+    }
+}
+
+.overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+
+    &.active {
+        display: block;
+    }
+}
+
+.signpop {
+    margin: 20px;
+
+    & > h3 {
+        font-size: 24px;
+        color: $gray666;
+    }
+
+    &__form {
+        & > input, & > button {
+            width: 100%;
+            height: 47px;
+            font-size: 16px;
+            box-sizing: border-box;
+            border-radius: 5px;
+        }
+
+        & > input {
+            border: solid 1px #cccc;
+            padding: 15px;
+            margin-top: 15px;
+        }
+
+        & > button {
+            background-color: init.$cyan448;
+            color: white;
+            margin: 10px 0;
+        }
+    }
+}
+
+.decorator-bar {
+    width: 100%;
+    height: 10px;
+    background: linear-gradient(270deg, #337788 0%, #66AABB 100%);
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+}
+
+.close-button {
+    width: 16px;
+    height: 16px;
+    margin: 7px;
+    position: absolute;
+    top: 25px;
+    right: 20px;
+    @include bg-img;
+    background-image: url("/static/images/icons/close16x16.webp");
+}
+
+.res-text {
+    font-size: 19px;
+    margin-bottom: 10px;
+
+    &--success {
+        color: green;
+    }
+
+    &--failure {
+        color: red;
+    }
+}
