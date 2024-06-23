@@ -1,10 +1,7 @@
 /* moduleを使うには、『呼び出したいファイル』の<script>タグにtype="module"属性を追加する必要あり */
 export async function fetchResponseJson(url) {
     try {
-        const response = await fetch(url);
-        if (!response.ok) {    // 200番以外の時にError, but200番で空の場合はNot Error
-            throw new Error(`HTTP Error! status: ${response.status}`);
-        }
+        const response = await fetch(url);  // 200番以外でも帰って欲しい為(400.500)response.okは使わない
         const jsonData = await response.json();
         return jsonData;
     } catch (error) {
@@ -80,7 +77,7 @@ export async function checkUserStatusByjwt(){
     try {
         const response = await fetch("/api/user/auth", {
             method: "GET",   // APIリクエストのヘッダーにJWTを含める
-            headers: { "Authorization": `Bearer ${token}`}
+            headers: {"Authorization": `Bearer ${token}`}
         });
         if (!response.ok) {    // 200番以外の時にError, but200番で空の場合はNot Error
             throw new Error(`HTTP Error! status: ${response.status}`);
@@ -186,9 +183,6 @@ export function createPopupSignin(){
                 headers: { "Content-Type": "application/json"},
                 body: JSON.stringify({ email: email, password: password})
             });
-            if (!response.ok) {    // 200番以外の時にError, but200番で空の場合はNot Error
-                throw new Error(`HTTP Error! status: ${response.status}`);
-            }
             const jsonData = await response.json();
             return jsonData;
         } catch(error) {
@@ -226,9 +220,6 @@ export function createPopupSignin(){
                 headers: { "Content-Type": "application/json"},
                 body: JSON.stringify({ name: name, email: email, password: password})
             });
-            if (!response.ok) {    // 200番以外の時にError, but200番で空の場合はNot Error
-                throw new Error(`HTTP Error! status: ${response.status}`);
-            }
             const jsonData = await response.json();
             if (jsonData.error) {
                 responseColorText(".res-text", jsonData.message, false);

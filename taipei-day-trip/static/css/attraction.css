@@ -66,14 +66,19 @@ img {
 }
 .header__title {
   padding-left: 10px;
+  cursor: pointer;
 }
-.header__nav {
+
+.nav {
   display: flex;
   align-items: center;
   gap: 20px;
   padding-right: 10px;
   height: 100%;
   color: #666666;
+}
+.nav__signpop {
+  cursor: pointer;
 }
 
 .footer {
@@ -226,7 +231,7 @@ img {
 }
 
 .res-text {
-  font-size: 1.25rem;
+  font-size: 19px;
   margin-bottom: 10px;
 }
 .res-text--success {

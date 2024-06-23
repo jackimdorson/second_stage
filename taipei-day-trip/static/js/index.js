@@ -46,6 +46,7 @@ async function loadNextPage(pageArg, keywordArg) {   //非同期関数のreturn�
     const jsonData = await fetchResponseJson(url);
     if (!jsonData.data) {
         cardsQryS.textContent = jsonData.message;
+        cardsQryS.classList.add("cards--nodata");
         return null;
     }
     const fragment = document.createDocumentFragment();  //DocumentFragmentを使用してDOM操作を効率化。直接appendChildを使用すると12回の再描画が発生しますが、DocumentFragmentを使用すると1回の再描画で済む。

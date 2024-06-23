@@ -1,6 +1,6 @@
 import logging
 import fastapi  #Request, HTTPException
-
+from fastapi.exceptions import RequestValidationError
 
 def setup_logger():
     logger = logging.getLogger('my_logger')   # ロガーの作成
@@ -40,8 +40,9 @@ async def critical_err_handler(request: fastapi.Request, exc: LoggerCritical): #
 
 async def http_err_handler(request: fastapi.Request, exc: fastapi.HTTPException):  #内部＋外部(詳細)Error, クライアントに詳細を返す際に使用
     logger.error(f"http_exc===={exc.detail}===={exc.status_code}")
-    return fastapi.responses.JSONResponse(     #既にstatus_code = 400とdetailを返しているため不要
-        content = exc.detail
+    return fastapi.responses.JSONResponse(
+        status_code = exc.status_code,  #固定値でなくclientに合わせたstatus_codeを返す(これがないと200を返す)
+        content = {"error": True, "message": exc.detail}
     )
 
 

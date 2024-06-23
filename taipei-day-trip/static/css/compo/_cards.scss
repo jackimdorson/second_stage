@@ -6,13 +6,20 @@
     gap: 30px;
     padding: 15px;
     box-sizing: border-box;
-    cursor: pointer;
+
+    &.cards--nodata {
+        grid-template-columns: 1fr;
+        text-align: center;
+        font-size: 1.5rem;
+        margin-top: 20px;
+    }
 
     &__link {
         height: 280px;
         position: relative;
         border: 1px solid init.$grayE8E;
         border-radius: 5px;
+        z-index: 5;
 
         &:hover {
             opacity: 0.9;

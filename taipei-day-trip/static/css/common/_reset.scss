@@ -91,16 +91,20 @@ img {
         justify-content: space-between;
     }
 
-    &__title{
+    &__title {
         padding-left: 10px;
+        cursor: pointer;
     }
+}
+.nav {
+    @include flex-center2;
+    gap: 20px;
+    padding-right: 10px;
+    height: 100%;
+    color: $gray666;
 
-    &__nav {
-        @include flex-center2;
-        gap: 20px;
-        padding-right: 10px;
-        height: 100%;
-        color: $gray666;
+    &__signpop {
+        cursor: pointer;
     }
 }
 

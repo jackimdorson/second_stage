@@ -28,7 +28,7 @@ class AttractionModel:
                         """,(keyword, f"%{keyword}%", size, page * size))
                     attractions = cursor.fetchall()     #返り値は　[ { },{ } ]  or  None
                     if not attractions:
-                        return False
+                        return []   #return後需要len, 因此不得使用False, None
                     for attraction in attractions:
                         cursor.execute(
                             "SELECT url FROM images WHERE attraction_id = %s",(attraction["id"],))

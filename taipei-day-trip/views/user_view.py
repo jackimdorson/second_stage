@@ -6,7 +6,7 @@ class UserView:
         if not tf_response:
             raise fastapi.HTTPException(
                 status_code = 400,
-                detail = {"error": True, "message": "已被註冊過的Email"}
+                detail = "註冊失敗, 重複的Email或其他原因"
             )
         return fastapi.responses.JSONResponse(
             content = {"ok": True},
@@ -32,7 +32,7 @@ class UserView:
         if not encoded_token:
             raise fastapi.HTTPException(
                 status_code = 400,
-                detail = {"error": True, "message": "帳號或密碼輸入錯誤"}
+                detail = "帳號或密碼輸入錯誤"
             )
         return fastapi.responses.JSONResponse(
             content = {"token": encoded_token},

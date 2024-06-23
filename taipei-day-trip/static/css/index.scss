@@ -53,6 +53,8 @@
         transition: transform 0.3s ease-in-out;
         overflow: hidden;   //hiddenとすることで下部スクロールを削除。表示するには右記が必要overflow-x: scroll;
         cursor: pointer;
+        position: relative;
+        z-index: 5;
     }
 
     &__item {
