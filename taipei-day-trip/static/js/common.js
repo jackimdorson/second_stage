@@ -77,9 +77,6 @@ export function jump2Top() {
 //JWTをheaderに含めてリクエストを送信
 export async function checkUserStatusByjwt(){
     const token = localStorage.getItem("jwtoken");
-    if (!token) {
-        return createPopupSignin();
-    }
     try {
         const response = await fetch("/api/user/auth", {
             method: "GET",   // APIリクエストのヘッダーにJWTを含める

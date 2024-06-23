@@ -4,6 +4,7 @@ import os      #getenv()...環境変数(.env)の読み込みに必要
 import dotenv  #load_dotenv()...環境変数(.env)の読み込みに必要
 import mysql.connector #pooling(Connection Poolの設定), Error
 
+
 dotenv.load_dotenv()   # 環境変数の読み込み
 
 private_key = os.getenv("PRIVATE_KEY").replace("\\n", "\n")   #秘密鍵を取得し、改行を適切に処理(秘密鍵に改行がある為)
@@ -25,6 +26,7 @@ try:
     myexception.logger.debug("成功connection_pool")
 except mysql.connector.Error as e:
     raise myexception.LoggerCritical(f"失敗connection_pool{e}")
+
 
 def connect_db():  #データベース接続オブジェクトはwith文が使える
     connection = connection_pool.get_connection()
