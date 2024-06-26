@@ -76,7 +76,9 @@
 
     &__input {
         width: calc(100% - 90px);
-        padding: 15px;
+        height: 100%;
+        padding-left: 15px;
+        box-sizing: border-box;
         border-top-left-radius: 5px;
         border-bottom-left-radius: 5px;
         &::placeholder {

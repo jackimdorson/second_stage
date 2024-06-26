@@ -1,5 +1,5 @@
 "use strict"
-import { fetchResponseJson, preloadImage, createElmAndClass, debounce, enableDarkMode, jump2Top, checkUserStatusByjwt } from "./common.js";
+import { fetchResponseJson, preloadImage, createElmAndClass, debounce, enableDarkMode, jump2Top, navHandler } from "./common.js";
 
 const cardsQryS = document.querySelector(".cards");
 const inputAttrQryS = document.querySelector(".search-box__input");
@@ -43,7 +43,7 @@ function createParentsElmDiv(attraction) {
 
 async function loadNextPage(pageArg, keywordArg) {   //非同期関数のreturnはawaitで処理しても常にPromiseを返す
     const url = makeUrl(pageArg, keywordArg);
-    const jsonData = await fetchResponseJson(url);
+    const jsonData = await fetchResponseJson("GET", url);
     if (!jsonData.data) {
         cardsQryS.textContent = jsonData.message;
         cardsQryS.classList.add("cards--nodata");
@@ -61,7 +61,7 @@ async function loadNextPage(pageArg, keywordArg) {   //非同期関数のreturn�
 
 
 document.addEventListener("DOMContentLoaded", async () => {    //loadNextPageは非同期関数で、関数は常にPromiseを返す為、内部でawaitしても、再度awaitする必要あり。
-    checkUserStatusByjwt();   //顯示畫面就馬上檢查UserStatus
+    navHandler.checkUserStatusByjwt();   //顯示畫面就馬上檢查UserStatus
     let page = 0;
     let keyword = null;
     page = await loadNextPage(page, keyword);   //0ページ目の読み込み(homepage入った時の)
@@ -104,7 +104,7 @@ document.addEventListener("DOMContentLoaded", async () => {    //loadNextPageは
     //透過List Bar方式抓data
     const leftButton = document.querySelector('.carousel__button--left');
     const rightButton = document.querySelector('.carousel__button--right');
-    const jsonData = await fetchResponseJson("/api/mrts");
+    const jsonData = await fetchResponseJson("GET", "/api/mrts");
     const fragment = document.createDocumentFragment();
 
     for (const stationList of jsonData.data) {

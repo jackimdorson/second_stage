@@ -102,6 +102,7 @@ img {
   background-color: #757575;
   border-radius: 50%;
   opacity: 60%;
+  z-index: 99;
 }
 
 @media (min-width: 500px) {
@@ -386,7 +387,9 @@ img {
 }
 .search-box__input {
   width: calc(100% - 90px);
-  padding: 15px;
+  height: 100%;
+  padding-left: 15px;
+  box-sizing: border-box;
   border-top-left-radius: 5px;
   border-bottom-left-radius: 5px;
 }

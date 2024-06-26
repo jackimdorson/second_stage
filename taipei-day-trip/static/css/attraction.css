@@ -102,6 +102,7 @@ img {
   background-color: #757575;
   border-radius: 50%;
   opacity: 60%;
+  z-index: 99;
 }
 
 @media (min-width: 500px) {
@@ -281,6 +282,10 @@ img {
   align-items: center;
   padding: 0 10px;
 }
+.schedule__data {
+  display: flex;
+  align-items: center;
+}
 
 input[type=radio] {
   margin: 0 3px;
@@ -368,7 +373,7 @@ input[type=date]::-webkit-calendar-picker-indicator {
 }
 
 .button {
-  width: 154px;
+  width: 160px;
   height: 36px;
   font-size: 19px;
   display: flex;

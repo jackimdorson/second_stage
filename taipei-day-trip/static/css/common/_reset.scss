@@ -1,5 +1,23 @@
 // _reset = ブラウザreset + 全サイト使い回せる『 共通構造(変数+mixin) 』を格納
 
+//  z-index 一覧
+//    _reset.scss  // 絕對 > 100
+//       .header: 100
+//       .jump2top-btn: 99
+
+//    _cards.scss
+//       .cards__link: 5
+
+//    _signup.scss
+//       .popup: 1000
+//       .overlay: 999
+
+//    index.scss
+//       .carousel__track: 5
+
+//    attraction.scss
+//       .carousel__button: 1
+
 $black: black;
 $white: white;
 $gray666: #666666;  // main
@@ -127,6 +145,7 @@ img {
     background-color: $gray757;
     border-radius: 50%;
     opacity: 60%;
+    z-index: 99;
 }
 
 @media (min-width: 500px) {

@@ -1,7 +1,7 @@
 "use strict"
-import { fetchResponseJson, preloadImage, createElmAndClass, enableDarkMode, jump2Top, checkUserStatusByjwt } from "./common.js";
+import { fetchResponseJson, preloadImage, createElmAndClass, enableDarkMode, jump2Top, navHandler } from "./common.js";
 
-checkUserStatusByjwt();
+navHandler.checkUserStatusByjwt();
 const attractionQryS = document.querySelector(".attraction");
 const titleQryS = document.querySelector(".attraction__title");
 const catQryS = document.querySelector(".attraction__cat");
@@ -16,7 +16,7 @@ async function fetchAttractionId(){
     if (!attractionId) {
         return null;
     }
-    const jsonData = await fetchResponseJson(`/api/attraction/${attractionId}`);
+    const jsonData = await fetchResponseJson("GET", `/api/attraction/${attractionId}`);
     if (!jsonData.data) {
         attractionQryS.textContent = jsonData.message;
         return null;
