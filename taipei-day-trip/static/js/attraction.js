@@ -148,7 +148,7 @@ async function responseJwtUserInfo(event){
 
     const response = await fetchResponseBearerJson("POST", "/api/booking", formData);
     if (response.ok) {
-        window.location.href = "/static/booking.html";
+        window.location.href = "/booking";
     }
 }
 document.querySelector(".attraction__form").addEventListener("submit", responseJwtUserInfo);
