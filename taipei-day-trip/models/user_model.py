@@ -1,3 +1,4 @@
+from schemas.user_schemas import ReqSignUpSchema, ReqSignInSchema, ResJwtSchema
 import config.db_config as mydbconfig
 import passlib.context  #CryptContext(パスワードのハッシュ化と検証を行う)
 import jwt
@@ -8,7 +9,8 @@ pwd_context = passlib.context.CryptContext(schemes=["bcrypt"], deprecated="auto"
 
 
 class UserModel:
-    def create_account(user):
+    @staticmethod
+    def create_account(user: ReqSignUpSchema) -> bool:
         with mydbconfig.connect_db() as db_conn:
             with db_conn.cursor(dictionary=True) as cursor:
                 try:
@@ -30,11 +32,9 @@ class UserModel:
                     db_conn.rollback()
                     raise Exception("SQL出問題:發生地=def create_account-1") from e
 
-
-    def get_user_info(authorization):
-        if authorization is None:
-            return False
-        token = authorization.split(" ")[1]  #auth...の値は：Bearer tokenとなっている故、spaceでsplitし、tokenのみ取得(Bearer除去)
+    @staticmethod
+    def get_user_info(jwtoken: str) -> dict:
+        token = jwtoken.split(" ")[1]  #jwtokenの値は：Bearer tokenとなっている故、spaceでsplitし、tokenのみ取得(Bearer除去)
         try:
             with open("static/taipei_day_trip_public_key.pem", "r") as file:
                 public_key = file.read()
@@ -46,7 +46,8 @@ class UserModel:
             print("無效的Token")
 
 
-    def get_jwt(auth):
+    @staticmethod
+    def get_jwt(signin: ReqSignInSchema) -> ResJwtSchema:
         with mydbconfig.connect_db() as db_conn:
             with db_conn.cursor(dictionary=True) as cursor:
                 try:
@@ -54,14 +55,14 @@ class UserModel:
                         SELECT id, name, email, password
                         FROM users
                         WHERE BINARY email = %s
-                    """, (auth.email,))
+                    """, (signin.email,))
                     jwt_data = cursor.fetchone()
                 except Exception as e:
                     raise Exception("SQL出問題:發生地=def get_jwt-1") from e
                 if not jwt_data:
                     return False
                 id, name, email, password = jwt_data.values()
-                if not pwd_context.verify(auth.password, password):  #pwd_context.hashの検証にはverifyメソッドを使う、第一に普通のpsw,第二にhash済み
+                if not pwd_context.verify(signin.password, password):  #pwd_context.hashの検証にはverifyメソッドを使う、第一に普通のpsw,第二にhash済み
                     return False
                 payload = {    	# jwtの生成
                     "user_id": id,

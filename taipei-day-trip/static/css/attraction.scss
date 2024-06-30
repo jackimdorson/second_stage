@@ -20,6 +20,10 @@
         font-size: 24px;
         font-weight: 700;
     }
+    &__form {
+        display: grid;
+        gap: 15px;
+    }
 }
 
 .schedule {
@@ -33,6 +37,10 @@
         font-weight: 700;
     }
 
+    &__price--text {
+        font-weight: 400;
+    }
+
     &__time {
         @include flex-center2;
 
@@ -44,6 +52,10 @@
             @include flex-center2;
             padding: 0 10px;
         }
+    }
+
+    &__data {
+        @include flex-center2;
     }
 }
 
@@ -144,14 +156,7 @@ input[type="date"] {
 }
 
 .button {
-    width: 154px;
-    height: 36px;
-    font-size: 19px;
-    @include flex-center2;
-    color: white;
-    border-radius: 5px;
-    background-color: init.$cyan448;
-    padding: 10px 20px;
+    @include init.button;
 }
 
 .info {
@@ -165,9 +170,6 @@ input[type="date"] {
 }
 
 .hr {
-    height: 1px;
-    background-color: init.$grayE8E;
-
     &.bottom__header {
         display: none;
     }

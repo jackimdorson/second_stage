@@ -1,9 +1,9 @@
 import config.db_config as mydbconfig
-import typing
 
 
 class AttractionModel:
-    def get_all(size: int, page: int, keyword: typing.Optional[str] = None) -> typing.List[dict]:
+    @staticmethod
+    def get_all(size: int, page: int, keyword: str | None) -> list[dict | None]:
         with mydbconfig.connect_db() as db_conn:
             with db_conn.cursor(dictionary=True) as cursor:  #預設tuple -> dictで返ってくる, cursorObjの生成が失敗することはない。
                 try:
@@ -38,7 +38,8 @@ class AttractionModel:
                 return attractions
 
 
-    def get_detail(attraction_id: int):
+    @staticmethod
+    def get_detail(attraction_id: int) -> dict:
         with mydbconfig.connect_db() as db_conn:
             with db_conn.cursor(dictionary=True) as cursor:
                 if attraction_id > 58:

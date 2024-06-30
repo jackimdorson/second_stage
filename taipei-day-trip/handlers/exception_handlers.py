@@ -1,6 +1,7 @@
+from schemas.common_schemas import ResErrorSchema
 import logging
 import fastapi  #Request, HTTPException
-from fastapi.exceptions import RequestValidationError
+
 
 def setup_logger():
     logger = logging.getLogger('my_logger')   # ロガーの作成
@@ -24,6 +25,8 @@ def setup_logger():
 logger = setup_logger()
 
 
+#グローバルエラーハンドラーを設定することで、個々のエンドポイントでtry-except文を使用する必要がなくなる。
+
 class LoggerCritical(Exception):     #オリジナルの例外
     def __init__(self, message = "重大Error"):
         self.message = message
@@ -32,6 +35,12 @@ class LoggerCritical(Exception):     #オリジナルの例外
 
 async def critical_err_handler(request: fastapi.Request, exc: LoggerCritical): #内部＋外部(簡易)Error  #excには例外の『インスタンス＝Obj』が自動で渡される(外見はメッセージ文だが、型はObj)
     logger.critical(f"critical_exc===={str(exc.__cause__)}===={str(exc)}") #exc.__cause__はfrom eのe。エラーメッセをcatch, str無くても表せるが、excはあくまでもobjなので、strを使った方が適切。
+    # return ResErrorSchema(
+    #     error = True,
+    #     message ="伺服器內部錯誤 Internal Server Error",
+    #     status_code = 500
+    # )  #defaultで500番を返す
+
     return fastapi.responses.JSONResponse(
         status_code = 500,  #contentで無いため表示されない
         content = {"error": True, "message": "伺服器內部錯誤 Internal Server Error"}
@@ -40,14 +49,25 @@ async def critical_err_handler(request: fastapi.Request, exc: LoggerCritical): #
 
 async def http_err_handler(request: fastapi.Request, exc: fastapi.HTTPException):  #内部＋外部(詳細)Error, クライアントに詳細を返す際に使用
     logger.error(f"http_exc===={exc.detail}===={exc.status_code}")
-    return fastapi.responses.JSONResponse(
-        status_code = exc.status_code,  #固定値でなくclientに合わせたstatus_codeを返す(これがないと200を返す)
+    # return ResErrorSchema(
+    #     error = True,
+    #     message = exc.detail,
+    #     status_code = exc.status_code #固定値でなくclientに合わせたstatus_codeを返す(これがないと200を返す)
+    # )
+    return fastapi.responses.JSONResponse(   #swaggerUIにはstatus_codeが含まれていない為、pydanticが使えなく、JsonResponseを使う
+        status_code = exc.status_code,
         content = {"error": True, "message": exc.detail}
     )
 
 
 async def global_err_handler(request: fastapi.Request, exc: Exception):   #全てのEndポイントで発生する未処理の例外をキャッチ(raise無しのerr, try囲んでなくてもキャッチ)
     logger.error(f"global_exc===={str(exc.__cause__)}===={str(exc)}")
+    # return ResErrorSchema(
+    #     error = True,
+    #     message ="伺服器內部錯誤 Internal Server Error",
+    #     status_code = 500
+    # )  #defaultで500番を返す
+
     return fastapi.responses.JSONResponse(
         status_code = 500,
         content = {"error": True, "message": "伺服器內部錯誤 Internal Server Error"}

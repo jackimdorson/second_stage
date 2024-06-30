@@ -1,0 +1,116 @@
+@use "common/reset" as *;
+@use "common/init" as init;   //先頭の_と.scssの記述不要
+@use "compo/signup" as signup; //indexでsignupのsccを当てるのに必要な記述
+
+.body {
+    color: $gray666;
+    min-height: 100vh;
+}
+
+.book {
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 10px;
+
+    &__wellcome {
+        padding: 40px 0 30px;
+        font-weight: bold;
+    }
+}
+
+fieldset {
+    border: none;
+    padding: 0;
+
+    & > legend {
+        font-size: 19px;
+        font-weight: bold;
+        padding: 0;
+        margin-bottom: 20px;
+    }
+}
+input {
+    border: solid 1px init.$grayE8E;
+    border-radius: 5px;
+    padding: 5px;
+}
+.form-submit {
+    @include init.button;
+    width: 173px;
+}
+
+.attraction-block {
+    position: relative;
+
+    &__img {
+        height: 200px;
+        padding-bottom: 30px;
+    }
+    &__info {
+        padding-bottom: 30px;
+
+        & > p {
+            padding-bottom: 16px;
+        }
+
+        p:first-of-type {
+            padding-bottom: 20px;
+            color: init.$cyan448;
+        }
+
+    & button {
+        height: 30px;
+        width: 30px;
+        position: absolute;
+        right: 0;
+        bottom: 0;
+    }
+    }
+}
+
+.contact-block, .payment-block {
+    display: grid;
+    gap: 20px;
+}
+
+.book .hr {
+    margin: 40px 0;
+}
+
+.confirm-block {
+    display: grid;
+    justify-content: end;
+    gap: 20px;
+    text-align: center;
+}
+
+.main {
+    min-height: unset;
+}
+
+.footer {
+    flex: 1;
+    align-items: unset;
+    min-height: 104px;
+
+    & > p {
+        padding-top: 19px;
+    }
+}
+
+@media (min-width: 500px){
+    .attraction-block {
+        display: flex;
+        &__img {
+            width: 250px;
+            padding: 0;
+        }
+        &__info {
+            padding: 0 0 0 30px;   //上でpadding設定してる為reset
+
+            & > button {
+                top: 0;
+            }
+        }
+    }
+}

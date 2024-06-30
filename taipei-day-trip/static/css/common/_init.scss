@@ -7,6 +7,17 @@ $cyanAAD: #AADDEE;
 $grayE8E: #E8E8E8;
 $grayF8F: #F8F8F8;
 
+@mixin button() {
+    width: 160px;
+    height: 36px;
+    font-size: 19px;
+    @include flex-center2;
+    color: white;
+    border-radius: 5px;
+    background-color: $cyan448;
+    padding: 10px 20px;
+}
+
 .body {
     font-family: "Noto Sans TC";
 }
@@ -19,6 +30,12 @@ $grayF8F: #F8F8F8;
 .darkmode-btn {
     display: none;
 }
+
+.hr {
+    height: 1px;
+    background-color: $grayE8E;
+}
+
 
 @media (min-width: 500px) {
     .darkmode-btn {
