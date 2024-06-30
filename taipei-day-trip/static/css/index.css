@@ -134,6 +134,11 @@ img {
   display: none;
 }
 
+.hr {
+  height: 1px;
+  background-color: #E8E8E8;
+}
+
 @media (min-width: 500px) {
   .darkmode-btn {
     display: block;

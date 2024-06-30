@@ -2,6 +2,7 @@ import config.db_config as mydbconfig
 
 
 class MrtModel:
+    @staticmethod
     def get_mrt_list():
         with mydbconfig.connect_db() as db_conn:
             with db_conn.cursor(dictionary=True) as cursor:

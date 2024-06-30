@@ -5,7 +5,7 @@ export async function fetchResponseJson(method, url, body = null) {
         method: method,
         headers: {"Content-Type": "application/json"}
     }
-    if (method !== "GET" && body) {
+    if (body) {
         format.body = JSON.stringify(body);
     }
     try {
@@ -22,12 +22,15 @@ export async function fetchResponseJson(method, url, body = null) {
 }
 
 
-export async function fetchResponseBearer(url) {
+export async function fetchResponseBearer(method, url) {
     const token = localStorage.getItem("jwtoken");
     try {
         const response = await fetch(url, {
-            method: "GET",   // APIリクエストのヘッダーにJWTを含める
-            headers: {"Authorization": `Bearer ${token}`}  //　JWTをheaderに含めてリクエストを送信
+            method: method,   // APIリクエストのヘッダーにJWTを含める
+            headers: {
+                "Authorization": `Bearer ${token}`,  //バックエンドの引数の名前は必ず小文字スタートの"authorization"not自分で命名
+                "Content-Type": "application/json"
+            }  //　JWTをheaderに含めてリクエストを送信
         });
         if (!response.ok) {   // 200番以外の時にError, but200番で空の場合はNot Error
             throw new Error(`內部連線出錯 HTTP Error status: ${response.status}`);
@@ -125,70 +128,48 @@ export function jump2Top() {
 }
 
 
-class SignPopup {
+class SignPopup {     // ポップアップの表示制御と、signIn / signUpの処理
     constructor(navSignpopQryS, navHandler) {
         this.navSignpopQryS = navSignpopQryS;
         this.navHandler = navHandler;  // NavHandlerのインスタンスを引数として受け取り保持
         this.popupQryS = document.querySelector(".popup");
         this.overlayQryS = document.querySelector(".overlay");
         this.COUNT_DOWN_RELOAD = 1200;
-        this.init();
     }
 
-    init() {
-        this.setup_event_listeners();
-    }
-
-    showSigninForm(){
+    showForm(type) {
+        const isSignin = type === "signin";
         this.popupQryS.innerHTML = `
-            <div class=decorator-bar></div>
+            <div class="decorator-bar"></div>
             <button class="close-button"></button>
             <div class="signpop">
-                <h3>登入會員帳號</h3>
+                <h3>${isSignin ? "登入會員帳號" : "註冊會員帳號"}</h3>
                 <form class="signpop__form">
-                    <label for="email"></label>
-                    <input type="email" id="email" name="email" required placeholder="輸入電子信箱">
-                    <label for="password"></label>
-                    <input type="password" id="password" name="password" required placeholder="輸入密碼">
-                    <button type="submit">登入帳戶</button>
+                    ${isSignin ? "" : '<input type="text" id="name" required placeholder="輸入姓名">'}
+                    <input type="email" id="${isSignin ? 'email' : 'new-email'}" required placeholder="輸入電子信箱">
+                    <input type="password" id="${isSignin ? 'password' : 'new-password'}" required placeholder="輸入密碼">
+                    <button type="submit">${isSignin ? "登入帳戶" : "註冊新帳戶"}</button>
                 </form>
                 <p class="res-text"></p>
-                <p>還沒有帳戶 ? <span class="signpop__toggle">點此註冊</span></p>
+                <p>${isSignin ? '還沒有帳戶' : '已經有帳戶了'} ? <span class="signpop__toggle">點此${isSignin ? '註冊' : '登入'}</span></p>
             </div>
         `;
-        document.querySelector(".signpop__toggle").addEventListener("click", this.showSignupForm.bind(this));
-        document.querySelector(".signpop__form").addEventListener("submit", this.handleSignin.bind(this));
+        document.querySelector(".signpop__toggle").addEventListener("click", () => this.navHandler[isSignin ? 'showSignupForm' : 'showSigninForm']()); //bracket記法.記法では不可
+        document.querySelector(".signpop__form").addEventListener("submit", isSignin ? this.handleSignin.bind(this) : this.handleSignup.bind(this));
         document.querySelector(".close-button").addEventListener("click", this.closePopup.bind(this));
-    }
+        this.popupQryS.classList.add("active");
+        this.overlayQryS.classList.add("active");
+        }
 
-    showSignupForm(){
-        this.popupQryS.innerHTML = `
-            <div class=decorator-bar></div>
-            <button class="close-button"></button>
-            <div class="signpop">
-                <h3>註冊會員帳號</h3>
-                <form class="signpop__form">
-                    <label for="name"></label>
-                    <input type="text" id="name" required placeholder="輸入姓名">
-                    <label for="new-email"></label>
-                    <input type="email" id="new-email" required placeholder="輸入電子郵件">
-                    <label for="new-password"></label>
-                    <input type="password" id="new-password" required placeholder="輸入密碼">
-                    <button type="submit">註冊新帳戶</button>
-                </form>
-                <p class="res-text"></p>
-                <p>已經有帳戶了 ? <span class="signpop__toggle">點此登入</p>
-            </div>
-        `;
-        document.querySelector(".signpop__toggle").addEventListener("click", this.showSigninForm.bind(this));
-        document.querySelector(".signpop__form").addEventListener("submit", this.handleSignup.bind(this));
-        document.querySelector(".close-button").addEventListener("click", this.closePopup.bind(this));
-    }
 
     async setJwtAfterChecked(emailArg, pswArg){
-        const email = document.getElementById(emailArg).value;
-        const psw = document.getElementById(pswArg).value;
-        const jsonData = await fetchResponseJson("PUT", "/api/user/auth", {email: email, password: psw})
+
+        const formData = {
+            email: document.getElementById(emailArg).value,
+            password: document.getElementById(pswArg).value
+        };
+
+        const jsonData = await fetchResponseJson("PUT", "/api/user/auth", formData)
         if (jsonData.error) {
             this.responseColorText(jsonData.message, false);
         } else {
@@ -214,10 +195,14 @@ class SignPopup {
 
     async handleSignup(event){
         event.preventDefault();
-        const name = document.getElementById("name").value;
-        const email = document.getElementById("new-email").value;
-        const psw = document.getElementById("new-password").value;
-        const jsonData = await fetchResponseJson("POST", "/api/user", {name: name, email: email, password: psw})
+
+        const formData = {
+            name: document.getElementById("name").value,
+            email: document.getElementById("new-email").value,
+            password: document.getElementById("new-password").value
+        };
+
+        const jsonData = await fetchResponseJson("POST", "/api/user", formData);
         if (jsonData.error) {
             this.responseColorText(jsonData.message, false);
         } else {
@@ -251,51 +236,35 @@ class SignPopup {
             }
         }
     }
-
-    setup_event_listeners() {
-        this.navSignpopQryS.addEventListener("click", () => {
-            this.showSigninForm();
-            this.popupQryS.classList.add("active");
-            this.overlayQryS.classList.add("active");
-        })
-
-        this.overlayQryS.addEventListener("click", () => {
-            this.closePopup();
-        })
-    }
 }
 
 
-class NavHandler {   //責務はnavの処理
+class NavHandler {   // Navの状態管理と表示制御
     constructor(qryS) {    //インスタンス化した際の引数を受けれる
         this.navSignpopQryS = document.querySelector(qryS);
         this.signPopup = null;  //newで呼び出す前に必ず定義されてること
     }
 
     async checkUserStatusByjwt() {
-        const jsonData = await fetchResponseBearer("/api/user/auth");
+        const jsonData = await fetchResponseBearer("GET", "/api/user/auth");
         if (!jsonData.data) {  //!==nullにしないのは、throw Errorされるとundefinedが返されこれに対応する為
             this.renderNavSignout();
         } else {
             this.renderNavSignin();
         }
+        return jsonData;
     }
 
     renderNavSignin() {  //signin成功時の処理の為popupに記述の方が相応しい
         this.navSignpopQryS.textContent = "登出系統";
-        if (this.signPopup) {
-            this.navSignpopQryS.removeEventListener("click", this.signPopup.showSigninForm.bind(this.signPopup)); //削除の際はbind不要
-        }
+        this.navSignpopQryS.removeEventListener("click", this.showSigninForm.bind(this)); //削除の際はbind不要
         this.navSignpopQryS.addEventListener("click", this.handleSignout.bind(this));
     }
 
     renderNavSignout() {
         this.navSignpopQryS.textContent = "登入/註冊";
         this.navSignpopQryS.removeEventListener("click", this.handleSignout.bind(this));
-        if (!this.signPopup) {
-            this.signPopup = new SignPopup(this.navSignpopQryS, this);
-        }
-        this.navSignpopQryS.addEventListener("click", this.signPopup.showSigninForm.bind(this.signPopup));
+        this.navSignpopQryS.addEventListener("click", this.showSigninForm.bind(this));
     }
 
     handleSignout() {
@@ -303,6 +272,36 @@ class NavHandler {   //責務はnavの処理
         this.renderNavSignout();
         window.location.reload();   //整個畫面都reflesh會下降UX
     }
+
+    showSigninForm() {
+        if (!this.signPopup) {
+            this.signPopup = new SignPopup(this.navSignpopQryS, this); //第二引数のthis＝現在のインスタンスを渡す
+        }
+        this.signPopup.showForm("signin");  //signinの引数を渡し、popupの表示
+    }
+
+    showSignupForm() {
+        if (!this.signPopup) {
+            this.signPopup = new SignPopup(this.navSignpopQryS, this);
+        }
+        this.signPopup.showForm("signup");
+    }
 }
 
 export const navHandler = new NavHandler(".nav__signpop");  //newで呼び出す前に必ず定義されてること
+
+
+
+const navBookingBtn = document.querySelector(".nav__booking");
+async function checkJwtUserInfo(event){
+    event.preventDefault();
+    const jsonData = await navHandler.checkUserStatusByjwt();
+    if (!jsonData.data) {
+        navHandler.showSigninForm();
+        return null;
+    } else{
+        window.location.href = "/booking";
+    }
+}
+navBookingBtn.addEventListener("click", checkJwtUserInfo);
+

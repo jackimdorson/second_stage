@@ -3,15 +3,30 @@ import fastapi
 import fastapi.staticfiles  #StaticFiles(静的ファイル用)
 from fastapi.responses import FileResponse  #為保留原始程式碼所需
 from fastapi import Request  #為保留原始程式碼所需
+from fastapi.openapi.utils import get_openapi  #更改swaggerUI的Response順序所需
 from controllers.mrt_contr import MrtRouter
 from controllers.attraction_contr import AttractionRouter
 from controllers.user_contr import UserRouter
+from controllers.booking_contr import BookingRouter
 
 
-app = fastapi.FastAPI()
+app = fastapi.FastAPI(
+	title = "APIs for Taipei Day Trip",   #swaggerUIのタイトルなどの設定
+	description = "台北一日遊網站 API 規格：網站後端程式必須支援這個 API 的規格，網站前端則根據 API 和後端互動。",
+	version = "1.0.0",
+	openapi_tags = [        #記述した順番通りにswaggerUiのtagsが表示される
+		{"name": "User"},   #小文字、大文字はendポイントのtasの命名と一致させる必要あり。
+		{"name": "Attraction"},
+		{"name": "MRT Station"},
+		{"name": "Booking"}
+	]
+)
+
+
 app.include_router(AttractionRouter)
 app.include_router(MrtRouter)
 app.include_router(UserRouter)
+app.include_router(BookingRouter)
 
 app.mount("/static", fastapi.staticfiles.StaticFiles(directory="static"), name="static")
 

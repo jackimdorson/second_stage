@@ -1,7 +1,7 @@
 "use strict"
 import { fetchResponseJson, preloadImage, createElmAndClass, enableDarkMode, jump2Top, navHandler } from "./common.js";
 
-navHandler.checkUserStatusByjwt();
+
 const attractionQryS = document.querySelector(".attraction");
 const titleQryS = document.querySelector(".attraction__title");
 const catQryS = document.querySelector(".attraction__cat");
@@ -116,17 +116,46 @@ const attachEventListeners = () => {
 };
 
 
-const priceSpan = document.querySelector(".schedule__price--text");
-const priceMap = {
-    morning: "新台幣 2000 元",
-    evening: "新台幣 2500 元"
-}
 
-document.querySelector(".schedule__time").addEventListener("change", function(event){
-    if (event.target.name === "selectday") {
-        priceSpan.textContent = priceMap[event.target.value];
-    }
+const priceSpan = document.querySelector(".schedule__price--text");
+
+document.querySelector(".schedule__time").addEventListener("change", () => {
+    priceSpan.textContent = `新台幣 ${document.querySelector('input[type="radio"]:checked').value} 元`
 })
+
+
+async function responseJwtUserInfo(event){
+    event.preventDefault();
+    const jsonData = await navHandler.checkUserStatusByjwt();
+    if (!jsonData.data) {
+        navHandler.showSigninForm();
+        return null;
+    }
+    const attractionId = window.location.pathname.split("/").pop();  //...pathname＝http://example.com/acb/10の場合, /abc/10を取得しpopで最後の要素を取得
+    const {id, name, email} = jsonData.data;
+    const price = document.querySelector('input[type="radio"]:checked').value;
+    const priceMap = { 2000: "morning", 2500: "afternoon" }
+
+    const formData = {
+        attractionId: parseInt(attractionId),   //文字列を整数に変換
+        date: document.getElementById("date").value,
+        time: priceMap[price],
+        price: parseInt(price),
+        userId: parseInt(id)
+    }
+
+    const response = await fetchResponseJson("POST", "/api/booking", formData);
+    if (response.ok) {
+        window.location.href = "/static/booking.html";
+    }
+}
+document.querySelector(".attraction__form").addEventListener("submit", responseJwtUserInfo);
+
+
+
 enableDarkMode();
 jump2Top();
 
+document.addEventListener("DOMContentLoaded", async () => {    //loadNextPageは非同期関数で、関数は常にPromiseを返す為、内部でawaitしても、再度awaitする必要あり。
+    await navHandler.checkUserStatusByjwt();
+})

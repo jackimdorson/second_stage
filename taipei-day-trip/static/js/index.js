@@ -44,7 +44,7 @@ function createParentsElmDiv(attraction) {
 async function loadNextPage(pageArg, keywordArg) {   //非同期関数のreturnはawaitで処理しても常にPromiseを返す
     const url = makeUrl(pageArg, keywordArg);
     const jsonData = await fetchResponseJson("GET", url);
-    if (!jsonData.data) {
+    if (!jsonData.data) {  //エラーの場合にはjsonDataの中にはerrorがある為、必ず.dataまで記述することに注意
         cardsQryS.textContent = jsonData.message;
         cardsQryS.classList.add("cards--nodata");
         return null;
@@ -61,7 +61,7 @@ async function loadNextPage(pageArg, keywordArg) {   //非同期関数のreturn�
 
 
 document.addEventListener("DOMContentLoaded", async () => {    //loadNextPageは非同期関数で、関数は常にPromiseを返す為、内部でawaitしても、再度awaitする必要あり。
-    navHandler.checkUserStatusByjwt();   //顯示畫面就馬上檢查UserStatus
+    await navHandler.checkUserStatusByjwt();   //顯示畫面就馬上檢查UserStatus
     let page = 0;
     let keyword = null;
     page = await loadNextPage(page, keyword);   //0ページ目の読み込み(homepage入った時の)
@@ -153,6 +153,11 @@ document.addEventListener("DOMContentLoaded", async () => {    //loadNextPageは
     carouselTrack.addEventListener("click", debounce(showOnSearchBox, 400));
     enableDarkMode();
     jump2Top();
+
+
+    // document.querySelector(".nav__booking").addEventListener("click", () => {
+    //     window.location.href = "/booking";
+    // })
 })
 
 
