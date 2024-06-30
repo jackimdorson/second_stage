@@ -23,9 +23,11 @@ async def get_all(
 		None,   #Query()は第一引数に...を取れば必須、Noneを取れば空の意味。
 		min_length = 1,  #値が提供された場合最低1文字以上(空文字は不許可)
 	    description = "用來完全比對捷運站名稱、或模糊比對景點名稱的關鍵字，沒有給定則不做篩選"
-)):
+)) -> ResAllAttractionSchema:
 	size = 12
 	attractions = AttractionModel.get_all(size, page, keyword)
+	if not attractions:
+		raise fastapi.HTTPException(status_code = 404, detail = "無資料")
 	next_page = page + 1 if len(attractions) == size else None
 	return AttractionView.render_all(next_page, attractions)
 
@@ -39,6 +41,8 @@ async def get_all(
         400: {"model": ResErrorSchema, "description": "景點編號不正確"},
         500: {"model": ResErrorSchema, "description": "伺服器內部錯誤"}
     })
-async def get_detail(attractionId: int = fastapi.Path(description = "景點編號")):
+async def get_detail(attractionId: int = fastapi.Path(description = "景點編號")) -> ResDetailAttractionSchema:
 	attraction = AttractionModel.get_detail(attractionId)
+	if not attraction:
+		raise fastapi.HTTPException(status_code = 400, detail = "景點編號不正確, 無資料")
 	return AttractionView.render_detail(attraction)

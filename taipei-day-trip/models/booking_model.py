@@ -1,10 +1,10 @@
+from schemas.booking_schemas import ReqBookingSchema
 import config.db_config as mydbconfig
 import jwt
 
 class BookingModel:
-    def get_booking_info(jwtoken):
-        if jwtoken is None:
-            return None
+    @staticmethod
+    def get_booking_info(jwtoken: str) -> dict | None:  #fetchOneは値がないこともある為
         token = jwtoken.split(" ")[1] #jwtokenの値は：Bearer tokenとなっている故、spaceでsplitし、tokenのみ取得(Bearer除去)
         try:
             with open("static/taipei_day_trip_public_key.pem", "r") as file:
@@ -32,14 +32,13 @@ class BookingModel:
                         LIMIT 1
                     """, (user_id,))
                     newest_item = cursor.fetchone()
-                    print(newest_item)
-                    print("==xxx==")
                     return newest_item
                 except Exception as e:
                     raise Exception("SQL出問題:發生地=def get_booking_info-1") from e
 
 
-    def post_booking_info(cart):
+    @staticmethod
+    def post_booking_info(cart: ReqBookingSchema) -> bool:
         with mydbconfig.connect_db() as db_conn:
             with db_conn.cursor(dictionary=True) as cursor:
                 try:
@@ -55,9 +54,8 @@ class BookingModel:
                     raise Exception("SQL出問題:發生地=def post_booking_info-1") from e
 
 
-    def delete_booking_info(jwtoken):
-        if jwtoken is None:
-            return None
+    @staticmethod
+    def delete_booking_info(jwtoken: str) -> bool:
         token = jwtoken.split(" ")[1] #jwtokenの値は：Bearer tokenとなっている故、spaceでsplitし、tokenのみ取得(Bearer除去)
         try:
             with open("static/taipei_day_trip_public_key.pem", "r") as file:

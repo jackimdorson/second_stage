@@ -42,6 +42,32 @@ export async function fetchResponseBearer(method, url) {
 }
 
 
+export async function fetchResponseBearerJson(method, url, body = null) {
+    const token = localStorage.getItem("jwtoken");
+    const format = {
+        method: method,
+        headers: {
+            "Authorization": `Bearer ${token}`,  //バックエンドの引数の名前は必ず小文字スタートの"authorization"not自分で命名
+            "Content-Type": "application/json"
+        }  //　JWTをheaderに含めてリクエストを送信
+    }
+    if (body) {
+        format.body = JSON.stringify(body);
+    }
+    try {
+        const response = await fetch(url, format);  // fetchの前にresponse.okを記述すると200番以外はfalse(400.500)
+        const jsonData = await response.json();
+        if(!response.ok) {
+            throw new Error (jsonData.message || `內部連線出錯 HTTP Error status: ${response.status}`);
+        }  //backEndでErrorMsgとstatusCodeを一貫させることでこのような記述が可能になる
+        return jsonData;
+    } catch (error) {  // error = エラーmsg, error場所が含まれる
+        console.error("Fetch Error", error);  //console.error(赤)は、エラーmsgをコンソールに出力するための関数
+        return {"error": true, "message": error.message};
+    }  //error.message は throw new Errorで投げられたmsgを取得可能な組み込みメソッド
+}
+
+
 export const preloadImage = (imgSrc) => {
     const link = document.createElement("link");
     link.rel = "preload";

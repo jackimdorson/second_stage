@@ -249,6 +249,7 @@ img {
 
 .body {
   color: #666666;
+  min-height: 100vh;
 }
 
 .book {
@@ -337,8 +338,9 @@ input {
 }
 
 .footer {
-  height: calc(100vh - 215px);
+  flex: 1;
   align-items: unset;
+  min-height: 104px;
 }
 .footer > p {
   padding-top: 19px;

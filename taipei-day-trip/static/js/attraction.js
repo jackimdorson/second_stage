@@ -1,6 +1,8 @@
 "use strict"
-import { fetchResponseJson, preloadImage, createElmAndClass, enableDarkMode, jump2Top, navHandler } from "./common.js";
+import { fetchResponseJson, fetchResponseBearerJson, preloadImage, createElmAndClass, enableDarkMode, jump2Top, navHandler } from "./common.js";
 
+document.addEventListener("DOMContentLoaded", async () => {    //loadNextPageは非同期関数で、関数は常にPromiseを返す為、内部でawaitしても、再度awaitする必要あり。
+    await navHandler.checkUserStatusByjwt();
 
 const attractionQryS = document.querySelector(".attraction");
 const titleQryS = document.querySelector(".attraction__title");
@@ -144,18 +146,13 @@ async function responseJwtUserInfo(event){
         userId: parseInt(id)
     }
 
-    const response = await fetchResponseJson("POST", "/api/booking", formData);
+    const response = await fetchResponseBearerJson("POST", "/api/booking", formData);
     if (response.ok) {
         window.location.href = "/static/booking.html";
     }
 }
 document.querySelector(".attraction__form").addEventListener("submit", responseJwtUserInfo);
 
-
-
 enableDarkMode();
 jump2Top();
-
-document.addEventListener("DOMContentLoaded", async () => {    //loadNextPageは非同期関数で、関数は常にPromiseを返す為、内部でawaitしても、再度awaitする必要あり。
-    await navHandler.checkUserStatusByjwt();
 })

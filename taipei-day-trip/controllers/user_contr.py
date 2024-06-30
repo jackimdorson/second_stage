@@ -19,8 +19,10 @@ UserRouter = fastapi.APIRouter()
         500: {"model": ResErrorSchema, "description": "伺服器內部錯誤"}
     })
 async def create_account(user: ReqSignUpSchema) -> ResOkSchema:
-    tf_response = UserModel.create_account(user)
-    return UserView.render_account(tf_response)
+	tf_response = UserModel.create_account(user)
+	if not tf_response:
+		raise fastapi.HTTPException(status_code = 400, detail = "註冊失敗, 重複的Email或其他原因")
+	return UserView.render_account(tf_response)
 
 
 @UserRouter.get("/api/user/auth",  # JWTの検証
@@ -31,7 +33,13 @@ async def create_account(user: ReqSignUpSchema) -> ResOkSchema:
 		200: {"model": ResUserInfoSchema, "description": "已登入的會員資料, null 表示未登入"}
 	})  #Header＝RequestHeaderから"authorization"を取得(defaultでは全て小文字に変換される故注意)なければNoneを取得
 async def get_user_info(authorization: str | None = fastapi.Header(None)) -> ResUserInfoSchema:  #名前衝突する為jwtと命名付けしない
+	if (authorization is None):
+		return ResUserInfoSchema(data = None)
+
 	decoded_token = UserModel.get_user_info(authorization)
+
+	if (not decoded_token):
+		return ResUserInfoSchema(data = None)
 	return UserView.render_user_info(decoded_token)
 
 
@@ -46,4 +54,6 @@ async def get_user_info(authorization: str | None = fastapi.Header(None)) -> Res
     })
 async def get_jwt(signin: ReqSignInSchema) -> ResJwtSchema:
 	encoded_token = UserModel.get_jwt(signin)
+	if not encoded_token:
+		raise fastapi.HTTPException(status_code = 400, detail = "帳號或密碼輸入錯誤")
 	return UserView.render_jwt(encoded_token)

@@ -1,5 +1,5 @@
 "use strict"
-import { fetchResponseJson, fetchResponseBearer, preloadImage, createElmAndClass, debounce, enableDarkMode, jump2Top, navHandler } from "./common.js";
+import { fetchResponseBearer, enableDarkMode, jump2Top, navHandler } from "./common.js";
 
 
 document.addEventListener("DOMContentLoaded", async() => {
@@ -26,7 +26,6 @@ document.addEventListener("DOMContentLoaded", async() => {
 
 async function renderBookingHTML(bookedInfo, name, email) {
     await bookedInfo;
-    console.log(bookedInfo);
     bookedInfo.time = bookedInfo.time === "morning" ? "早上9點到下午4點" : "下午2點到下午9點";
     bookingQry.innerHTML = `
         <section class="attraction-block">
@@ -105,9 +104,10 @@ async function renderBookingHTML(bookedInfo, name, email) {
         }
     }
     deleteBtn.addEventListener("click", handledeleteClick)
-
 }
 });
+enableDarkMode();
+jump2Top();
     // document.querySelector(".booking__form").addEventListener("submit", (event) => {
     //     event.preventDefault();
     // })

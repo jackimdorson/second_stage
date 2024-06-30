@@ -9,6 +9,7 @@ pwd_context = passlib.context.CryptContext(schemes=["bcrypt"], deprecated="auto"
 
 
 class UserModel:
+    @staticmethod
     def create_account(user: ReqSignUpSchema) -> bool:
         with mydbconfig.connect_db() as db_conn:
             with db_conn.cursor(dictionary=True) as cursor:
@@ -31,10 +32,8 @@ class UserModel:
                     db_conn.rollback()
                     raise Exception("SQL出問題:發生地=def create_account-1") from e
 
-
-    def get_user_info(jwtoken: str | None) -> dict | None:
-        if jwtoken is None:
-            return None
+    @staticmethod
+    def get_user_info(jwtoken: str) -> dict:
         token = jwtoken.split(" ")[1]  #jwtokenの値は：Bearer tokenとなっている故、spaceでsplitし、tokenのみ取得(Bearer除去)
         try:
             with open("static/taipei_day_trip_public_key.pem", "r") as file:
@@ -47,6 +46,7 @@ class UserModel:
             print("無效的Token")
 
 
+    @staticmethod
     def get_jwt(signin: ReqSignInSchema) -> ResJwtSchema:
         with mydbconfig.connect_db() as db_conn:
             with db_conn.cursor(dictionary=True) as cursor:
