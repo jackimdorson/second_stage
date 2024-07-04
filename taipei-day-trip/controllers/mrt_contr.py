@@ -1,9 +1,12 @@
+#Standard Lib
+import fastapi  #APIRouter()
+import typing   #Optional(値が指定された型または、Noneを受け入れるのに必要), List(list内の要素の型を指定するために使用), Union(2つの結合)
+
+#Local Lib
 from schemas.common_schemas import ResErrorSchema
 from schemas.mrt_schemas import MrtListSchema
 from models.mrt_model import MrtModel
 from views.mrt_view import MrtView
-import fastapi  #APIRouter()
-import typing   #Optional(値が指定された型または、Noneを受け入れるのに必要), List(list内の要素の型を指定するために使用), Union(2つの結合)
 
 
 MrtRouter = fastapi.APIRouter()  #rootingをmodule化(contrに分割)する時に必要になる

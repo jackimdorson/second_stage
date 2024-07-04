@@ -1,0 +1,33 @@
+@use "common/reset" as *;
+@use "common/init" as init;   //先頭の_と.scssの記述不要
+@use "compo/signup" as signup; //indexでsignupのsccを当てるのに必要な記述
+
+.body {
+    color: $gray666;
+    min-height: 100vh;
+}
+
+.thankyou {
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 40px 10px 0;
+    text-align: center;
+
+    & > p {
+        margin: 30px;
+    }
+}
+
+.main {
+    min-height: unset;
+}
+
+.footer {
+    flex: 1;
+    align-items: unset;
+    min-height: 104px;
+
+    & > p {
+        padding-top: 19px;
+    }
+}

@@ -1,9 +1,12 @@
+#Standard Lib
+import fastapi
+import typing
+
+#Local Lib
 from schemas.common_schemas import ResErrorSchema
 from schemas.attraction_schemas import ResAllAttractionSchema, ResDetailAttractionSchema
 from models.attraction_model import AttractionModel
 from views.attraction_view import AttractionView
-import fastapi
-import typing
 
 
 AttractionRouter = fastapi.APIRouter()

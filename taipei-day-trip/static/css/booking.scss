@@ -29,11 +29,15 @@ fieldset {
         margin-bottom: 20px;
     }
 }
-input {
+input, .tpfield {
     border: solid 1px init.$grayE8E;
     border-radius: 5px;
     padding: 5px;
+    height: 100%;
+    box-sizing: border-box;
+    margin-left: 5px;
 }
+
 .form-submit {
     @include init.button;
     width: 173px;
@@ -97,6 +101,19 @@ input {
         padding-top: 19px;
     }
 }
+
+
+.form-group {
+    display: flex;
+    align-items: center;
+    height: 38px;
+}
+
+.tpfield {
+    width: 200px;
+}
+
+
 
 @media (min-width: 500px){
     .attraction-block {

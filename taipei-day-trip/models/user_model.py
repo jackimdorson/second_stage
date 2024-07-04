@@ -1,8 +1,13 @@
-from schemas.user_schemas import ReqSignUpSchema, ReqSignInSchema, ResJwtSchema
-import config.db_config as mydbconfig
+#Standard Lib
+import datetime
+
+#3rd-party Lib
 import passlib.context  #CryptContext(パスワードのハッシュ化と検証を行う)
 import jwt
-import datetime
+
+#Local Lib
+from schemas.user_schemas import ReqSignUpSchema, ReqSignInSchema, ResJwtSchema
+import config.db_config as mydbconfig
 
 
 pwd_context = passlib.context.CryptContext(schemes=["bcrypt"], deprecated="auto") #使用するアリゴリズムを指定、auto"に設定することで、bcryptが非推奨になった場合に自動的により安全なのに切り替える

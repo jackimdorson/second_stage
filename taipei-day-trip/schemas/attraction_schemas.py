@@ -1,6 +1,8 @@
-import pydantic
-import typing
+#Standard Lib
 import decimal  #Decimal(dbの型で, pyには無いためimportが必要)
+
+#3rd-party Lib
+import pydantic
 
 
 class AttractionItemSchema(pydantic.BaseModel):  #pydanticの注意点：1.定義の順番、2.dbとの名称一致(asで取得)、3.データ型    dbの構造とは直接関係なく、APIの要件を満たすためのデータ構造を定義するためのもの=データの形式とバリデーションをを行う

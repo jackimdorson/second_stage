@@ -1,9 +1,12 @@
+#Standard Lib
+import fastapi
+import typing
+
+#Local Lib
 from schemas.common_schemas import ResErrorSchema, ResOkSchema
 from schemas.user_schemas import ResUserInfoSchema, ReqSignUpSchema, ReqSignInSchema, ResJwtSchema
 from models.user_model import UserModel
 from views.user_view import UserView
-import fastapi
-import typing
 
 
 UserRouter = fastapi.APIRouter()

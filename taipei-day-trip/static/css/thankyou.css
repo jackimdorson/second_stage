@@ -252,88 +252,14 @@ img {
   min-height: 100vh;
 }
 
-.book {
+.thankyou {
   max-width: 980px;
   margin: 0 auto;
-  padding: 10px;
-}
-.book__wellcome {
-  padding: 40px 0 30px;
-  font-weight: bold;
-}
-
-fieldset {
-  border: none;
-  padding: 0;
-}
-fieldset > legend {
-  font-size: 19px;
-  font-weight: bold;
-  padding: 0;
-  margin-bottom: 20px;
-}
-
-input, .tpfield {
-  border: solid 1px #E8E8E8;
-  border-radius: 5px;
-  padding: 5px;
-  height: 100%;
-  box-sizing: border-box;
-  margin-left: 5px;
-}
-
-.form-submit {
-  width: 160px;
-  height: 36px;
-  font-size: 19px;
-  display: flex;
-  align-items: center;
-  color: white;
-  border-radius: 5px;
-  background-color: #448899;
-  padding: 10px 20px;
-  width: 173px;
-}
-
-.attraction-block {
-  position: relative;
-}
-.attraction-block__img {
-  height: 200px;
-  padding-bottom: 30px;
-}
-.attraction-block__info {
-  padding-bottom: 30px;
-}
-.attraction-block__info > p {
-  padding-bottom: 16px;
-}
-.attraction-block__info p:first-of-type {
-  padding-bottom: 20px;
-  color: #448899;
-}
-.attraction-block__info button {
-  height: 30px;
-  width: 30px;
-  position: absolute;
-  right: 0;
-  bottom: 0;
-}
-
-.contact-block, .payment-block {
-  display: grid;
-  gap: 20px;
-}
-
-.book .hr {
-  margin: 40px 0;
-}
-
-.confirm-block {
-  display: grid;
-  justify-content: end;
-  gap: 20px;
+  padding: 40px 10px 0;
   text-align: center;
+}
+.thankyou > p {
+  margin: 30px;
 }
 
 .main {
@@ -347,30 +273,4 @@ input, .tpfield {
 }
 .footer > p {
   padding-top: 19px;
-}
-
-.form-group {
-  display: flex;
-  align-items: center;
-  height: 38px;
-}
-
-.tpfield {
-  width: 200px;
-}
-
-@media (min-width: 500px) {
-  .attraction-block {
-    display: flex;
-  }
-  .attraction-block__img {
-    width: 250px;
-    padding: 0;
-  }
-  .attraction-block__info {
-    padding: 0 0 0 30px;
-  }
-  .attraction-block__info > button {
-    top: 0;
-  }
-}/*# sourceMappingURL=booking.css.map */
+}/*# sourceMappingURL=thankyou.css.map */

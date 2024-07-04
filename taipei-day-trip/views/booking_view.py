@@ -1,6 +1,10 @@
-from schemas.common_schemas import ResOkSchema
-from schemas.booking_schemas import ReqCartSchema, AttractionItemSchema, cartItemSchema
+#Standard Lib
 import datetime
+
+#Local Lib
+from schemas.common_schemas import ResOkSchema
+from schemas.booking_schemas import ReqCartSchema, AttractionItemSchema, cartItemSchema, ReqCartListSchema
+
 
 class BookingView:
     @staticmethod
@@ -16,3 +20,15 @@ class BookingView:
     @staticmethod
     def render_is_success(is_success: bool) -> ResOkSchema:
         return ResOkSchema(ok = True)
+
+
+#########多種購物車
+    @staticmethod
+    def render_all(all_items: list) -> ReqCartListSchema:
+        for item in all_items:   #fetchallのアンパッキング
+            date_obj, time, price, id, name, address , img_url = item
+            date_str = date_obj.isoformat() if isinstance(date_obj, datetime.date) else str(date_obj)  # 日付(date)は直接渡せないので、文字列に一度変換してから渡す(もし文字列ならそのまま使用)
+
+        return ReqCartListSchema(data = list[cartItemSchema](
+            attraction = AttractionItemSchema(id = id, name = name, address = address, image = img_url),
+            date = date_str, time = time, price = price))

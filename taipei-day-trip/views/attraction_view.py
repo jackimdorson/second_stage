@@ -1,5 +1,5 @@
+#Local Lib
 from schemas.attraction_schemas import AttractionItemSchema, ResAllAttractionSchema, ResDetailAttractionSchema
-import fastapi
 
 
 class AttractionView:
