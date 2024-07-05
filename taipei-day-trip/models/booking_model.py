@@ -2,7 +2,7 @@
 import jwt
 
 #Local Lib
-from schemas.booking_schemas import ReqBookingSchema
+from schemas.booking_schemas import PostBookingReqSchema
 import config.db_config as mydbconfig
 
 
@@ -42,7 +42,7 @@ class BookingModel:
 
 
     @staticmethod
-    def post_booking_info(cart: ReqBookingSchema) -> bool:
+    def post_booking_info(cart: PostBookingReqSchema) -> bool:
         with mydbconfig.connect_db() as db_conn:
             with db_conn.cursor(dictionary=True) as cursor:
                 try:

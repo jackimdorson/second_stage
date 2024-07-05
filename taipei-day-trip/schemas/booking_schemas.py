@@ -5,7 +5,14 @@ import datetime
 import pydantic
 
 
-class ReqBookingSchema(pydantic.BaseModel):
+class BaseBookingAttractionSchema(pydantic.BaseModel):
+    id: int
+    name: str
+    address: str
+    image: str
+
+
+class PostBookingReqSchema(pydantic.BaseModel):
     attractionId: int
     date: datetime.date
     time: str
@@ -26,22 +33,15 @@ class ReqBookingSchema(pydantic.BaseModel):
     }
 
 
-class AttractionItemSchema(pydantic.BaseModel):
-    id: int
-    name: str
-    address: str
-    image: str
-
-
-class cartItemSchema(pydantic.BaseModel):
-    attraction: AttractionItemSchema
+class GetCart200Child1Schema(pydantic.BaseModel):
+    attraction: BaseBookingAttractionSchema
     date: datetime.date
     time: str
     price: int
 
 
-class ReqCartSchema(pydantic.BaseModel):
-    data: cartItemSchema | None
+class GetBooking200Schema(pydantic.BaseModel):
+    data: GetCart200Child1Schema | None
 
     model_config = {
         "json_schema_extra": {
@@ -65,8 +65,8 @@ class ReqCartSchema(pydantic.BaseModel):
 
 
 #########多種購物車
-class ReqCartListSchema(pydantic.BaseModel):
-    data: list[cartItemSchema] | None
+class GetCart200Schema(pydantic.BaseModel):
+    data: list[GetCart200Child1Schema] | None
 
     model_config = {
         "json_schema_extra" : {

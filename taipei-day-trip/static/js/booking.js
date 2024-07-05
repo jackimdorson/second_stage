@@ -55,30 +55,12 @@ document.addEventListener("DOMContentLoaded", async() => {
                     </div>
                     <div class="form-group">
                         <label for="phone">手機號碼 : </label>
-                        <input type="tel" id="phone" name="phone" required placeholder="0908-888-888">
+                        <input type="tel" id="phone" name="phone" placeholder="0908-888-888" maxlength="12" pattern="^(0[2-9]\d{2}[-]?\d{3}[-]?\d{3})$" required>
                     </div>
                     <p><b>請保持手機暢通，準時到達，導覽人員將用手機與您聯繫，務必留下正確的聯絡方式。</b></p>
                 </fieldset>
 
                 <hr class="hr">
-
-                ${""/*
-                <fieldset class="payment-block">
-                    <legend>信用卡付款資訊</legend>
-                    <div class="form-group">
-                        <label for="cc-number">卡片號碼 : </label>
-                        <input id="cc-number" autocomplete="cc-number" type="text" inputmode="numeric" pattern="[0-9\s]{13,19}" maxlength="19" placeholder="**** **** **** ****" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="cc-exp">過期時間 : </label>
-                        <input id="cc-exp" autocomplete="cc-exp" type="text" placeholder="MM / YY" pattern="(0[1-9]|1[0-2])\/[0-9]{2}" maxlength="5" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="cc-csc">驗證密碼 : </label>
-                        <input id="cc-csc" autocomplete="cc-csc" type="text" inputmode="numeric" pattern="[0-9]{3,4}" maxlength="4" placeholder="CVV" required>
-                    </div>
-                </fieldset>
-                */}
 
                 <fieldset class="payment-block">
                     <legend>信用卡付款資訊</legend>
@@ -98,41 +80,6 @@ document.addEventListener("DOMContentLoaded", async() => {
                     </div>
                 </fieldset>
 
-
-
-            ${""/*
-                <div class="container">
-                    <div class="jumbotron">
-                        <h1>TapPay Fields Bootstrap Example</h1>
-                        <p class="lead">TapPay Fields 是 三個 host 在 TapPay 的網頁，利用 iframe 的方式嵌入商家網頁，提供安全的卡號輸入方式</p>
-                    </div>
-                    <form>
-                        <div class="form-group">
-                            <label for="exampleInputEmail1">Email address</label>
-                            <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Email">
-                        </div>
-                        <div class="form-group card-number-group">
-                            <label for="card-number" class="control-label"><span id="cardtype"></span>卡號</label>
-                            <div class="form-control card-number"></div>
-                        </div>
-                        <div class="form-group expiration-date-group">
-                            <label for="expiration-date" class="control-label">卡片到期日</label>
-                            <div class="form-control expiration-date" id="tappay-expiration-date"></div>
-                        </div>
-                        <div class="form-group ccv-group">
-                            <label for="ccv" class="control-label">卡片後三碼</label>
-                            <div class="form-control ccv"></div>
-                        </div>
-
-                        <button type="submit" class="btn btn-default">Pay</button>
-                    </form>
-                    <br>
-                    <pre class="jumbotron text-left" id="curl">
-                    </pre>
-                </div>
-            */}
-
-
                 <hr class="hr">
 
                 <div class="confirm-block">
@@ -141,6 +88,42 @@ document.addEventListener("DOMContentLoaded", async() => {
                 </div>
             </form>
         `;
+
+
+        document.getElementById('phone').addEventListener('input', function (e) {
+            let x = e.target.value.replace(/\D/g, '').substring(0, 10);
+            const regex = /^(0[2-9]\d{0,2}|09\d{2})?\d{0,8}$/;
+
+            if (regex.test(x)) {
+                if (x.length > 7) {
+                  x = x.slice(0, 4) + '-' + x.slice(4, 7) + '-' + x.slice(7);
+                } else if (x.length > 4) {
+                  x = x.slice(0, 4) + '-' + x.slice(4);
+                }
+                e.target.value = x;
+              } else {
+                e.target.value = e.target.value.slice(0, -1); // 無効な入力の場合、最後の文字を削除
+              }
+        });
+
+
+        // document.getElementById('phone').addEventListener('input', function (e) {
+        //     let x = e.target.value.replace(/\D/g, '').substring(0, 10);
+        //     const regex = /^(0[2-9]\d{2}[-]?\d{3}[-]?\d{3})$/;
+
+        //     if (x.length > 7) {
+        //         let format = x.slice(0, 4) + '-' + x.slice(4, 7) + '-' + x.slice(7);
+
+        //         if (!regex.test(format)) {
+        //             e.target.value = e.target.value.slice(0, -1); // 無効な入力の場合、最後の文字を削除
+        //         } else {
+        //             e.target.value = format
+        //         }
+
+        //     } else if (x.length > 4) {
+        //         e.target.value = x.slice(0, 4) + '-' + x.slice(4);
+        //     }
+        // })
 
 
         const deleteBtn = document.querySelector(".delete-btn");

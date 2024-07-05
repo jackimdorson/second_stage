@@ -5,7 +5,7 @@ import typing   #Optional(値が指定された型または、Noneを受け入�
 import pydantic #BaseModel, Field(default値などの設定)
 
 
-class MrtListSchema(pydantic.BaseModel):
+class GetMrts200Schema(pydantic.BaseModel):
 	data: typing.List[str]
 
 	model_config = {
