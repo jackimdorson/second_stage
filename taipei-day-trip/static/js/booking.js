@@ -55,7 +55,7 @@ document.addEventListener("DOMContentLoaded", async() => {
                     </div>
                     <div class="form-group">
                         <label for="phone">手機號碼 : </label>
-                        <input type="tel" id="phone" name="phone" placeholder="0908-888-888" maxlength="12" pattern="^(0[2-9]\d{2}[-]?\d{3}[-]?\d{3})$" required>
+                        <input type="tel" id="phone" name="phone" placeholder="0908-888-888" maxlength="12" required>
                     </div>
                     <p><b>請保持手機暢通，準時到達，導覽人員將用手機與您聯繫，務必留下正確的聯絡方式。</b></p>
                 </fieldset>
