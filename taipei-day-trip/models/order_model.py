@@ -107,6 +107,7 @@ class OrderModel:
             try:  #apiが求める形式をreqする際は厳格なことが多い為、pydanticでjsonable_encoderしてもエラーになることが追い
                 response = await client.post("https://sandbox.tappaysdk.com/tpc/payment/pay-by-prime",
                     json = request_body, headers = request_header, timeout = 30.0)
+                print(f"Request Headerは{request_header}")
                 return response.json()
 
             except httpx.RequestError as e:
