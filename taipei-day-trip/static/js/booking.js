@@ -1,5 +1,5 @@
 "use strict"
-import { fetchResponseBearer, enableDarkMode, jump2Top, navHandler } from "./common.js";
+import { fetchResponseJson, fetchResponseBearer, enableDarkMode, jump2Top, navHandler } from "./common.js";
 
 
 document.addEventListener("DOMContentLoaded", async() => {
@@ -10,7 +10,7 @@ document.addEventListener("DOMContentLoaded", async() => {
     }
     const spanUsernameQryS = document.querySelector(".book__username");
     const {id, name, email} = jsonData.data;
-    spanUsernameQryS.textContent = name;
+    spanUsernameQryS.textContent = `${name}，待預訂的行程如下：`;
     try {
         const bookedData = await fetchResponseBearer("GET", "/api/booking");
         if (!bookedData.data) {
@@ -65,16 +65,16 @@ document.addEventListener("DOMContentLoaded", async() => {
                 <fieldset class="payment-block">
                     <legend>信用卡付款資訊</legend>
 
-                    <div class="form-group">
+                    <div class="form-group group--number">
                         <label for="cc-number">卡片號碼 : </label>
                         <div class="tpfield" id="cc-number"></div>
                         <span id="cardtype"></span>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group group--exp">
                         <label for="cc-exp">過期時間 : </label>
                         <div class="tpfield" id="cc-exp"></div>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group group--csc">
                         <label for="cc-csc">驗證密碼 : </label>
                         <div class="tpfield" id="cc-csc"></div>
                     </div>
@@ -107,25 +107,6 @@ document.addEventListener("DOMContentLoaded", async() => {
         });
 
 
-        // document.getElementById('phone').addEventListener('input', function (e) {
-        //     let x = e.target.value.replace(/\D/g, '').substring(0, 10);
-        //     const regex = /^(0[2-9]\d{2}[-]?\d{3}[-]?\d{3})$/;
-
-        //     if (x.length > 7) {
-        //         let format = x.slice(0, 4) + '-' + x.slice(4, 7) + '-' + x.slice(7);
-
-        //         if (!regex.test(format)) {
-        //             e.target.value = e.target.value.slice(0, -1); // 無効な入力の場合、最後の文字を削除
-        //         } else {
-        //             e.target.value = format
-        //         }
-
-        //     } else if (x.length > 4) {
-        //         e.target.value = x.slice(0, 4) + '-' + x.slice(4);
-        //     }
-        // })
-
-
         const deleteBtn = document.querySelector(".delete-btn");
         const handledeleteClick = async () => {
             const jsonData = await navHandler.checkUserStatusByjwt();
@@ -148,17 +129,13 @@ document.addEventListener("DOMContentLoaded", async() => {
 
 
     //tappay
-
     async function enableTappay(bookedInfo) {
 
         fetch("/api/tappay-config")
             .then(response => response.json())
-            .then(config => {
-                console.log(config)
-                console.log(config.APP_ID)
-                console.log("==1==")
+            .then(config => {   //SDKの初期化及び環境設定。
                 TPDirect.setupSDK(config.APP_ID, config.APP_KEY, config.environment)
-                TPDirect.card.setup({
+                TPDirect.card.setup({  //外観及び検証の設定。
                     fields: {
                         number: {  //elementは要素取得が目的。取得するのは本来inputのdivであることに注意
                             element: "#cc-number",
@@ -180,73 +157,66 @@ document.addEventListener("DOMContentLoaded", async() => {
                         ".invalid": {
                             "color": "red"
                         }
-                    },
-                    // 顯示卡號輸入正確後，會顯示前六後四碼信用卡卡號
+                    },   // 顯示卡號輸入正確後，會顯示前六後四碼信用卡卡號
                     isMaskCreditCardNumber: true,
                     maskCreditCardNumberRange: {
                         beginIndex: 0,
                         endIndex: 11
                     }
                 })
-        
-        
+
+
                 TPDirect.card.onUpdate(function (update) {
-        
+
                     if (update.canGetPrime) {
                         document.querySelector("button[type='submit']").removeAttribute("disabled");
                     } else {
                         document.querySelector("button[type='submit']").setAttribute("disabled", "true");
                     }
-        
+
                     var newType = update.cardType === 'unknown' ? '' : update.cardType;
                     document.getElementById("cardtype").textContent = newType;
-        
-        
+
+
                     // number 欄位是錯誤的
                     if (update.status.number === 2) {
-                        setNumberFormGroupToError("#cc-number");
+                        setNumberFormGroupToError(".group--number");
                     } else if (update.status.number === 0) {
-                        setNumberFormGroupToSuccess("#cc-number");
+                        setNumberFormGroupToSuccess(".group--number");
                     } else {
-                        setNumberFormGroupToNormal("#cc-number");
+                        setNumberFormGroupToNormal(".group--number");
                     }
-        
+
                     if (update.status.expiry === 2) {
-                        setNumberFormGroupToError("#cc-exp");
+                        setNumberFormGroupToError(".group--exp");
                     } else if (update.status.expiry === 0) {
-                        setNumberFormGroupToSuccess("#cc-exp");
+                        setNumberFormGroupToSuccess(".group--exp");
                     } else {
-                        setNumberFormGroupToNormal("#cc-exp");
+                        setNumberFormGroupToNormal(".group--exp");
                     }
-        
+
                     if (update.status.ccv === 2) {
-                        setNumberFormGroupToError("#cc-csc");
+                        setNumberFormGroupToError(".group--csc");
                     } else if (update.status.ccv === 0) {
-                        setNumberFormGroupToSuccess("#cc-csc");
+                        setNumberFormGroupToSuccess(".group--csc");
                     } else {
-                        setNumberFormGroupToNormal("#cc-csc");
+                        setNumberFormGroupToNormal(".group--csc");
                     }
                 })
             })
             .catch(error => console.error("Error fetching TapPay config:", error));
 
 
-
-
-
         document.querySelector(".booking__form").addEventListener("submit", async function(event) {
             event.preventDefault();
-
             const tappayStatus = TPDirect.card.getTappayFieldsStatus();
-            console.log(tappayStatus);
-
             // Check TPDirect.card.getTappayFieldsStatus().canGetPrime before TPDirect.card.getPrime
             if (tappayStatus.canGetPrime === false) {
                 alert('can not get prime');
                 return;
             }
 
-            //TPDirect.card.getPrimeカード情報を検証し一時的なトークン(プライム)を生成しresultを返す。トークン自身はresult.card.primeにある
+            //入力したカード情報を暗号化し、Tappayサーバーに送信しprimeトークンを取得後cb関数で自分のbackEndに。primeトークンはresult.card.primeにある
             TPDirect.card.getPrime(async function (result) {
                 if (result.status !== 0) {   // 0 = success
                     alert('get prime error ' + result.msg);
@@ -292,6 +262,7 @@ document.addEventListener("DOMContentLoaded", async() => {
                 })
                 .then(data => {
                     const orderNumber = data.data.number;
+                    fetchResponseBearer("DELETE", "/api/booking");
                     window.location.href = `/thankyou?number=${encodeURIComponent(orderNumber)}`;
                 })
                 .catch(error => {
@@ -319,24 +290,7 @@ document.addEventListener("DOMContentLoaded", async() => {
             document.querySelector(selector).classList.remove("has-success");
             document.querySelector(selector).classList.remove("has-error");
         }
-
-        function forceBlurIos() {
-            if (!isIos()) {
-                return
-            }
-            var input = document.createElement('input')
-            input.setAttribute('type', 'text')
-            // Insert to active element to ensure scroll lands somewhere relevant
-            document.activeElement.prepend(input)
-            input.focus()
-            input.parentNode.removeChild(input)
-        }
-
-        function isIos() {
-            return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-        }
     }
-
 
     enableDarkMode();
     jump2Top();

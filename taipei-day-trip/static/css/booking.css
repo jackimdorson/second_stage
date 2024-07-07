@@ -260,6 +260,16 @@ img {
 .book__wellcome {
   padding: 40px 0 30px;
   font-weight: bold;
+  display: inline-block;
+  width: calc(100vw - 100px);
+}
+.book__order-btn {
+  width: 70px;
+  display: inline-block;
+  background-color: #448899;
+  color: white;
+  padding: 10px 5px;
+  border-radius: 5px;
 }
 
 fieldset {
@@ -312,7 +322,7 @@ input, .tpfield {
   padding-bottom: 20px;
   color: #448899;
 }
-.attraction-block__info button {
+.attraction-block button {
   height: 30px;
   width: 30px;
   position: absolute;

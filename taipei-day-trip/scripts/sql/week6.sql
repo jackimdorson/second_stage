@@ -26,3 +26,8 @@ CREATE TABLE `orders` (
 
 ALTER TABLE `orders`
 MODIFY COLUMN `order_number` BIGINT NOT NULL UNIQUE;
+
+-- 注文時にのみ電話番号が必要な場合は、注文テーブルに追加する方が適切。usersに追加すると多くのnullが生じる。
+-- VARCHARにするのは--に対応するため.default00000は後から追加する際に、not nullでエラーにならないようにするため
+ALTER TABLE `orders`
+ADD COLUMN phone VARCHAR(20) NOT NULL DEFAULT '0000-000-000';

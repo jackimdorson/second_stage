@@ -262,6 +262,21 @@ img {
   margin: 30px;
 }
 
+input[type=number] {
+  width: 200px;
+  border: solid #757575 1px;
+  border-radius: 3px;
+  padding: 5px 10px;
+  margin: 20px 5px 0 25px;
+}
+
+.order-btn {
+  background-color: #757575;
+  padding: 5px 10px;
+  border-radius: 5px;
+  color: white;
+}
+
 .main {
   min-height: unset;
 }

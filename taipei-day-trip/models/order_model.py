@@ -57,9 +57,9 @@ class OrderModel:
                 try:
                     cursor.execute("""
                         INSERT INTO orders
-                        (final_price, order_number, user_id)
-                        VALUES (%s, %s, %s)
-                    """,(req_body.order.price, order_number, user_id ))
+                        (final_price, order_number, user_id, phone)
+                        VALUES (%s, %s, %s, %s)
+                    """,(req_body.order.price, order_number, user_id, req_body.order.contact.phone))
 
                     order_id = cursor.lastrowid  # 挿入されたordersのidを取得し以下でorder_itemsテーブルにデータを挿入
 
@@ -107,7 +107,6 @@ class OrderModel:
             try:  #apiが求める形式をreqする際は厳格なことが多い為、pydanticでjsonable_encoderしてもエラーになることが追い
                 response = await client.post("https://sandbox.tappaysdk.com/tpc/payment/pay-by-prime",
                     json = request_body, headers = request_header, timeout = 30.0)
-                print(f"Request Headerは{request_header}")
                 return response.json()
 
             except httpx.RequestError as e:
@@ -130,3 +129,31 @@ class OrderModel:
                 except Exception as e:
                     db_conn.rollback()
                     raise Exception("SQL出問題:發生地=def mark_order_as_paid-1") from e
+
+
+    @staticmethod
+    def get_order_number(order_number: int) -> dict:
+        with mydbconfig.connect_db() as db_conn:
+            with db_conn.cursor(dictionary=True) as cursor:
+                try:
+                    cursor.execute("""
+                        SELECT
+                            o.payment_status, o.final_price, o.order_number, o.phone,
+                            oitem.date, oitem.time,
+                            a.id, a.name AS `a_name`,a.address,
+                            users.name AS `user_name`, users.email,
+                            (SELECT images.url FROM images WHERE images.attraction_id = a.id LIMIT 1) AS img_url
+                        FROM
+                            orders AS o
+                        INNER JOIN
+                            order_items AS oitem ON o.id = oitem.order_id
+                        INNER JOIN
+                            attractions AS a ON oitem.attraction_id = a.id
+                        INNER JOIN
+                            users ON o.user_id = users.id
+                        WHERE
+                            o.order_number = %s;
+                    """,(order_number,))
+                    return cursor.fetchone()  #fetchoneはなければNoneを返す
+                except Exception as e:
+                    raise Exception("SQL出問題:發生地=def get_order_number") from e

@@ -95,7 +95,7 @@ class GetOrderNum200Child1Schema(PostOrdersReqChild1Schema):  #引数が持つpr
 
 
 class GetOrderNum200Schema(pydantic.BaseModel):
-	data: GetOrderNum200Child1Schema
+	data: GetOrderNum200Child1Schema | None
 
 	model_config = {
 		"json_schema_extra": {

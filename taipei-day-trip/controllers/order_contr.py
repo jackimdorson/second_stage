@@ -26,7 +26,6 @@ async def post_orders(req_body: PostOrdersReqSchema, authorization: str | None =
 	if (authorization is None):
 		OrderView.raise_403()
 	order_number = await OrderModel.create_order(authorization, req_body)
-
 	if (order_number is None):
 		OrderView.raise_400()
 	return OrderView.return_200(order_number)
@@ -40,5 +39,11 @@ async def post_orders(req_body: PostOrdersReqSchema, authorization: str | None =
         200: {"model": GetOrderNum200Schema, "description": "根據訂單編號取得訂單資訊，null 表示沒有資料"},
         403: {"model": ResErrorSchema, "description": "未登入系統, 拒絕存取"}
     })
-async def get_ordernumber() -> GetOrderNum200Schema:
-	pass
+async def get_order_number(orderNumber: int = fastapi.Path(..., description = "訂單編號"), authorization: str | None = fastapi.Header(None)) -> GetOrderNum200Schema:
+    print(orderNumber)
+    if (authorization is None):
+        OrderView.raise_403()
+    fetchone = OrderModel.get_order_number(orderNumber)
+    if (fetchone is None):
+        return GetOrderNum200Schema(data = None)
+    return OrderView.return_200_get_order_number(fetchone)

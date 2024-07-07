@@ -15,6 +15,17 @@
     &__wellcome {
         padding: 40px 0 30px;
         font-weight: bold;
+        display: inline-block;
+        width: calc(100vw - 100px)
+    }
+
+    &__order-btn {
+        width: 70px;
+        display: inline-block;
+        background-color: init.$cyan448;
+        color: $white;
+        padding: 10px 5px;
+        border-radius: 5px;
     }
 }
 
@@ -50,6 +61,7 @@ input, .tpfield {
         height: 200px;
         padding-bottom: 30px;
     }
+    
     &__info {
         padding-bottom: 30px;
 
@@ -61,6 +73,7 @@ input, .tpfield {
             padding-bottom: 20px;
             color: init.$cyan448;
         }
+    }
 
     & button {
         height: 30px;
@@ -68,7 +81,6 @@ input, .tpfield {
         position: absolute;
         right: 0;
         bottom: 0;
-    }
     }
 }
 
