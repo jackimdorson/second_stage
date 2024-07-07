@@ -1,10 +1,35 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-Hant">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Thank You</title>
+  <title>謝謝訂購</title>
+  <link rel="preload" href="/static/css/thankyou.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <link rel="icon" type="image/x-icon" href="/static/images/icons/husky32x32.ico">
 </head>
-<body>
+<body class="body">
+  <header class="header">
+    <section class="header__content">
+      <h2 class="header__title"><a href="/">台北一日遊</a></h2>
+      <nav class="header__nav nav">
+        <button class="darkmode-btn">
+        </button>
+        <a class="nav__booking">預定行程</a>
+        <a class="nav__signpop">登入/註冊</a>
+        <div class="overlay"></div>
+        <div class="popup"></div>
+      </nav>
+    </section>
+    <hr class="hr bottom__header">
+  </header>
+  <main class="main">
+    <section class="thankyou">
+    </section>
+    <button class="jump2top-btn"></button>
+  </main>
+  <footer class="footer">
+    <p>COPYRIGHT © 2021 台北一日遊</p>
+  </footer>
+    <script type="module" src="/static/js/thankyou.js"></script>
 </body>
 </html>

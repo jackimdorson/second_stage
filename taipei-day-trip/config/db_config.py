@@ -1,13 +1,15 @@
-#config = システム全体の設定  dbconfig = 特にdbに特化した設定
-import handlers.exception_handlers as myexception
-import os      #getenv()...環境変数(.env)の読み込みに必要
-import dotenv  #load_dotenv()...環境変数(.env)の読み込みに必要
+#Standard Lib
+import os  #getenv()...環境変数(.env)の読み込みに必要
+
+#3rd-party Lib
 import mysql.connector #pooling(Connection Poolの設定), Error
 
+#Local Lib
+import handlers.exception_handlers as myexception
 
-dotenv.load_dotenv()   # 環境変数の読み込み
 
 private_key = os.getenv("PRIVATE_KEY").replace("\\n", "\n")   #秘密鍵を取得し、改行を適切に処理(秘密鍵に改行がある為)
+
 
 dbconfig = {  #Connection Poolの設定　dbconfigは、データベース接続の設定を含む辞書
     "host": os.getenv("DB_HOST"),

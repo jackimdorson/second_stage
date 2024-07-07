@@ -15,6 +15,17 @@
     &__wellcome {
         padding: 40px 0 30px;
         font-weight: bold;
+        display: inline-block;
+        width: calc(100vw - 100px)
+    }
+
+    &__order-btn {
+        width: 70px;
+        display: inline-block;
+        background-color: init.$cyan448;
+        color: $white;
+        padding: 10px 5px;
+        border-radius: 5px;
     }
 }
 
@@ -29,11 +40,15 @@ fieldset {
         margin-bottom: 20px;
     }
 }
-input {
+input, .tpfield {
     border: solid 1px init.$grayE8E;
     border-radius: 5px;
     padding: 5px;
+    height: 100%;
+    box-sizing: border-box;
+    margin-left: 5px;
 }
+
 .form-submit {
     @include init.button;
     width: 173px;
@@ -46,6 +61,7 @@ input {
         height: 200px;
         padding-bottom: 30px;
     }
+    
     &__info {
         padding-bottom: 30px;
 
@@ -57,6 +73,7 @@ input {
             padding-bottom: 20px;
             color: init.$cyan448;
         }
+    }
 
     & button {
         height: 30px;
@@ -64,7 +81,6 @@ input {
         position: absolute;
         right: 0;
         bottom: 0;
-    }
     }
 }
 
@@ -97,6 +113,19 @@ input {
         padding-top: 19px;
     }
 }
+
+
+.form-group {
+    display: flex;
+    align-items: center;
+    height: 38px;
+}
+
+.tpfield {
+    width: 200px;
+}
+
+
 
 @media (min-width: 500px){
     .attraction-block {

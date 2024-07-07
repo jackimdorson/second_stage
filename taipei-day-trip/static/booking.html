@@ -24,7 +24,8 @@
   </header>
   <main class="main">
     <section class="book">
-      <p class="book__wellcome">您好，<span class="book__username"></span>，待預訂的行程如下：</p>
+      <div class="book__wellcome">您好，<span class="book__username"></span></div>
+      <button class="book__order-btn"><a href="/thankyou">查詢訂單</a></button>
       <section class="booking"></section>
     </section>
     <button class="jump2top-btn"></button>
@@ -33,5 +34,6 @@
     <p>COPYRIGHT © 2021 台北一日遊</p>
   </footer>
   <script type="module" src="/static/js/booking.js"></script>      <!-- module = defer + strict mode -->
+  <script src="https://js.tappaysdk.com/sdk/tpdirect/v5.18.0"></script>
 </body>
 </html>

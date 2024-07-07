@@ -1,8 +1,11 @@
 # JSONデータの読み込みとMySQLへの保存
-import config.db_config as mydbconfig
-import json    #day-trip.jsonからのデータ取得必要
-import re
+#Standard Lib
+import json  #day-trip.jsonからのデータ取得必要
+import re  #正規表現
 import contextlib  #contextmanager=リソースの取得と解放を自動的に行うための仕組み(file操作,db接続,network)__enter__と__exit__という2つのメソッドを持つオブジェクト
+
+#Local Lib
+import config.db_config as mydbconfig
 
 
 @contextlib.contextmanager   #関数をコンテキストマネージャとして機能させるために使用

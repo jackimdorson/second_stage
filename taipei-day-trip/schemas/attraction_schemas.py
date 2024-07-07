@@ -1,9 +1,11 @@
-import pydantic
-import typing
+#Standard Lib
 import decimal  #Decimal(dbの型で, pyには無いためimportが必要)
 
+#3rd-party Lib
+import pydantic
 
-class AttractionItemSchema(pydantic.BaseModel):  #pydanticの注意点：1.定義の順番、2.dbとの名称一致(asで取得)、3.データ型    dbの構造とは直接関係なく、APIの要件を満たすためのデータ構造を定義するためのもの=データの形式とバリデーションをを行う
+
+class BaseAttractionSchema(pydantic.BaseModel):  #pydanticの注意点：1.定義の順番、2.dbとの名称一致(asで取得)、3.データ型    dbの構造とは直接関係なく、APIの要件を満たすためのデータ構造を定義するためのもの=データの形式とバリデーションをを行う
 	id: int
 	name: str
 	category: str
@@ -16,12 +18,12 @@ class AttractionItemSchema(pydantic.BaseModel):  #pydanticの注意点：1.定�
 	images: list[str]
 
 
-class ResAllAttractionSchema(pydantic.BaseModel):
+class GetAttractions200Schema(pydantic.BaseModel):
 	nextPage: int | None = pydantic.Field(
 		default = None, ge = 0,
 		description = "下一頁的編號。若沒有下一頁,則為null"
 	) #このフィールドは整数型で、値が存在しない場合はNoneを許容. デフォルト値をNoneに設定し、フィールドの説明を追加
-	data: list[AttractionItemSchema] = pydantic.Field(default_factory = list) #listはmutableな為全てのインスタンスで共有されるのを防ぐ為、都度default値を生成する、default_factoryを使う。
+	data: list[BaseAttractionSchema] = pydantic.Field(default_factory = list) #listはmutableな為全てのインスタンスで共有されるのを防ぐ為、都度default値を生成する、default_factoryを使う。
 
 	model_config = {     #この3行は固定。
 		"json_schema_extra": {
@@ -44,8 +46,8 @@ class ResAllAttractionSchema(pydantic.BaseModel):
 	}
 
 
-class ResDetailAttractionSchema(pydantic.BaseModel):   #Pydanticでは、フィールドに初期値を設定しない場合、そのフィールドは必須と見な
-	data: AttractionItemSchema    #デフォルト値として空のリストを設定。各インスタンスが独自のリストを持つように。＝[]だと各自共通に
+class GetAttractionId200Schema(pydantic.BaseModel):   #Pydanticでは、フィールドに初期値を設定しない場合、そのフィールドは必須と見な
+	data: BaseAttractionSchema    #デフォルト値として空のリストを設定。各インスタンスが独自のリストを持つように。＝[]だと各自共通に
 
 	model_config = {
 		"json_schema_extra": {
