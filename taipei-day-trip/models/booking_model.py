@@ -8,17 +8,8 @@ import config.db_config as mydbconfig
 
 class BookingModel:
     @staticmethod
-    def get_booking_info(jwtoken: str) -> dict | None:  #fetchOneは値がないこともある為, fetchOneはdefaultではtupleだが、dict=trueをしているため
-        token = jwtoken.split(" ")[1] #jwtokenの値は：Bearer tokenとなっている故、spaceでsplitし、tokenのみ取得(Bearer除去)
-        try:
-            with open("static/taipei_day_trip_public_key.pem", "r") as file:
-                public_key = file.read()
-            decoded_token = jwt.decode(token, public_key, algorithms=["RS256"])
-        except jwt.ExpiredSignatureError:  #期限切れの際にcatch
-            print("超過有效期限")
-        except jwt.InvalidTokenError:  #改ざんされた際にcatch
-            print("無效的Token")
-        user_id = decoded_token["user_id"]
+    def get_booking_info(decoded_jwt: str) -> dict | None:  #fetchOneは値がないこともある為, fetchOneはdefaultではtupleだが、dict=trueをしているため
+        user_id = decoded_jwt.data.id
 
         with mydbconfig.connect_db() as db_conn:
             with db_conn.cursor(dictionary=True) as cursor:
@@ -59,17 +50,8 @@ class BookingModel:
 
 
     @staticmethod
-    def delete_booking_info(jwtoken: str) -> bool:
-        token = jwtoken.split(" ")[1] #jwtokenの値は：Bearer tokenとなっている故、spaceでsplitし、tokenのみ取得(Bearer除去)
-        try:
-            with open("static/taipei_day_trip_public_key.pem", "r") as file:
-                public_key = file.read()
-            decoded_token = jwt.decode(token, public_key, algorithms=["RS256"])
-        except jwt.ExpiredSignatureError:  #期限切れの際にcatch
-            print("超過有效期限")
-        except jwt.InvalidTokenError:  #改ざんされた際にcatch
-            print("無效的Token")
-        user_id = decoded_token["user_id"]
+    def delete_booking_info(decoded_jwt: str) -> bool:
+        user_id = decoded_jwt.data.id
 
         with mydbconfig.connect_db() as db_conn:
             with db_conn.cursor(dictionary=True) as cursor:
@@ -87,17 +69,8 @@ class BookingModel:
 
 #########多種購物車
     @staticmethod
-    def get_cart_info(jwtoken: str) -> list | None:  #fetchOneは値がないこともある為
-        token = jwtoken.split(" ")[1] #jwtokenの値は：Bearer tokenとなっている故、spaceでsplitし、tokenのみ取得(Bearer除去)
-        try:
-            with open("static/taipei_day_trip_public_key.pem", "r") as file:
-                public_key = file.read()
-            decoded_token = jwt.decode(token, public_key, algorithms=["RS256"])
-        except jwt.ExpiredSignatureError:  #期限切れの際にcatch
-            print("超過有效期限")
-        except jwt.InvalidTokenError:  #改ざんされた際にcatch
-            print("無效的Token")
-        user_id = decoded_token["user_id"]
+    def get_cart_info(decoded_jwt: str) -> list | None:  #fetchOneは値がないこともある為
+        user_id = decoded_jwt.data.id
 
         with mydbconfig.connect_db() as db_conn:
             with db_conn.cursor(dictionary=True) as cursor:
@@ -120,17 +93,8 @@ class BookingModel:
 
 
     @staticmethod
-    def delete_cart_info(jwtoken: str, item_id: int) -> bool:
-        token = jwtoken.split(" ")[1] #jwtokenの値は：Bearer tokenとなっている故、spaceでsplitし、tokenのみ取得(Bearer除去)
-        try:
-            with open("static/taipei_day_trip_public_key.pem", "r") as file:
-                public_key = file.read()
-            decoded_token = jwt.decode(token, public_key, algorithms=["RS256"])
-        except jwt.ExpiredSignatureError:  #期限切れの際にcatch
-            print("超過有效期限")
-        except jwt.InvalidTokenError:  #改ざんされた際にcatch
-            print("無效的Token")
-        user_id = decoded_token["user_id"]
+    def delete_cart_info(decoded_jwt: str, item_id: int) -> bool:
+        user_id = decoded_jwt.data.id
 
         with mydbconfig.connect_db() as db_conn:
             with db_conn.cursor(dictionary=True) as cursor:

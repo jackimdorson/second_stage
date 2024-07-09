@@ -27,7 +27,7 @@ try:
     )
     myexception.logger.debug("成功connection_pool")
 except mysql.connector.Error as e:
-    raise myexception.LoggerCritical(f"失敗connection_pool{e}")
+    raise myexception.LoggerCritical("失敗connection_pool") from e
 
 
 def connect_db():  #データベース接続オブジェクトはwith文が使える

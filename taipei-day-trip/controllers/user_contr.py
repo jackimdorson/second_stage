@@ -3,17 +3,17 @@ import fastapi
 import typing
 
 #Local Lib
+from dependencies import has_jwt_or_null
 from schemas.common_schemas import ResErrorSchema, ResOkSchema
 from schemas.user_schemas import GetAuth200Schema, BaseSignUpSchema, BaseSignInSchema, BaseTokenStrSchema
 from models.user_model import UserModel
 from views.user_view import UserView
 
 
-UserRouter = fastapi.APIRouter()
+UserRouter = fastapi.APIRouter(prefix = "/api/user", tags = ["User"])
 
 
-@UserRouter.post("/api/user",
-	tags = ["User"],
+@UserRouter.post("",
     summary = "註冊一個新的會員",
 	response_model = typing.Union[ResOkSchema, ResErrorSchema],
     responses = {
@@ -28,26 +28,18 @@ async def post_user(user: BaseSignUpSchema) -> ResOkSchema:
 	return UserView.render_account(tf_response)
 
 
-@UserRouter.get("/api/user/auth",  # JWTの検証
-	tags = ["User"],
+@UserRouter.get("/auth",  # JWTの検証
     summary = "取得當前登入的會員資訊",
 	response_model = GetAuth200Schema,
 	responses = {
 		200: {"model": GetAuth200Schema, "description": "已登入的會員資料, null 表示未登入"}
 	})  #Header＝RequestHeaderから"authorization"を取得(defaultでは全て小文字に変換される故注意)なければNoneを取得
-async def get_auth(authorization: str | None = fastapi.Header(None)) -> GetAuth200Schema:  #名前衝突する為jwtと命名付けしない
-	if (authorization is None):
-		return GetAuth200Schema(data = None)
-
-	decoded_token = UserModel.get_user_info(authorization)
-
-	if (not decoded_token):
-		return GetAuth200Schema(data = None)
-	return UserView.render_user_info(decoded_token)
+async def get_auth(decoded_jwt: str | None = fastapi.Depends(has_jwt_or_null)) -> GetAuth200Schema:  #名前衝突する為jwtと命名付けしない
+	return decoded_jwt
 
 
-@UserRouter.put("/api/user/auth",  #登入成功即生產JWT
-	tags = ["User"],
+
+@UserRouter.put("/auth",  #登入成功即生產JWT
     summary = "登入會員帳戶",
 	response_model = typing.Union[BaseTokenStrSchema, ResErrorSchema],
 	responses = {

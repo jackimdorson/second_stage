@@ -15,8 +15,8 @@ from schemas.order_schemas import PostOrdersReqSchema
 
 class OrderModel:
     @staticmethod
-    async def create_order(jwtoken: str, req_body: PostOrdersReqSchema) -> int | None:
-        user_id = OrderModel.get_user_id(jwtoken)
+    async def create_order(decoded_jwt: str, req_body: PostOrdersReqSchema) -> int | None:
+        user_id = decoded_jwt.data.id
         order_number = OrderModel.create_order_number()
         order_id = OrderModel.insert_getting_order_id(req_body, order_number, user_id)
         result = await OrderModel.reqres_tappay(req_body, order_number)
@@ -26,20 +26,20 @@ class OrderModel:
         return None
 
 
-    @staticmethod
-    def get_user_id(jwtoken: str) -> int:
-        token = jwtoken.split(" ")[1] #jwtokenの値は：Bearer tokenとなっている故、spaceでsplitし、tokenのみ取得(Bearer除去)
-        try:
-            with open("static/taipei_day_trip_public_key.pem", "r") as file:
-                public_key = file.read()
-            decoded_token = jwt.decode(token, public_key, algorithms=["RS256"])
-            user_id = decoded_token["user_id"]
-            return user_id
+    # @staticmethod
+    # def get_user_id(jwtoken: str) -> int:
+    #     token = jwtoken.split(" ")[1] #jwtokenの値は：Bearer tokenとなっている故、spaceでsplitし、tokenのみ取得(Bearer除去)
+    #     try:
+    #         with open("static/taipei_day_trip_public_key.pem", "r") as file:
+    #             public_key = file.read()
+    #         decoded_token = jwt.decode(token, public_key, algorithms=["RS256"])
+    #         user_id = decoded_token["user_id"]
+    #         return user_id
 
-        except jwt.ExpiredSignatureError as e:  #期限切れの際にcatch
-            raise fastapi.HTTPException(status_code = 400, detail = "JWT超過有效期限") from e
-        except jwt.InvalidTokenError as e:  #改ざんされた際にcatch
-            raise fastapi.HTTPException(status_code = 400, detail = "JWT簽名不一致") from e
+    #     except jwt.ExpiredSignatureError as e:  #期限切れの際にcatch
+    #         raise fastapi.HTTPException(status_code = 400, detail = "JWT超過有效期限") from e
+    #     except jwt.InvalidTokenError as e:  #改ざんされた際にcatch
+    #         raise fastapi.HTTPException(status_code = 400, detail = "JWT簽名不一致") from e
 
 
     @staticmethod

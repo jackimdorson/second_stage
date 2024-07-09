@@ -1,6 +1,6 @@
 #Standard Lib
 import fastapi  #APIRouter()
-import typing   #Optional(値が指定された型または、Noneを受け入れるのに必要), List(list内の要素の型を指定するために使用), Union(2つの結合)
+import typing   #List(list内の要素の型を指定するために使用), Union(2つの結合)
 
 #Local Lib
 from schemas.common_schemas import ResErrorSchema
@@ -9,12 +9,12 @@ from models.mrt_model import MrtModel
 from views.mrt_view import MrtView
 
 
-MrtRouter = fastapi.APIRouter()  #rootingをmodule化(contrに分割)する時に必要になる
+MrtRouter = fastapi.APIRouter(prefix = "/api", tags = ["MRT Station"])  #rootingをmodule化(contrに分割)する時に必要になる
 
 
-@MrtRouter.get("/api/mrts",
-    tags = ["MRT Station"],
+@MrtRouter.get("/mrts",
     summary = "取得捷運站名稱列表",
+	description = "取得所有捷運站名稱列表，按照週邊景點的數量由大到小排序",
     response_model = typing.Union[GetMrts200Schema, ResErrorSchema],  #このresponse2つの記述がないと、UI上には正常処理のみしか反映されない
 	responses = {
 		200: {"model": GetMrts200Schema, "description": "正常運作"},

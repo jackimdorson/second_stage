@@ -38,17 +38,18 @@ class UserModel:
                     raise Exception("SQL出問題:發生地=def create_account-1") from e
 
     @staticmethod
-    def get_user_info(jwtoken: str) -> dict:
-        token = jwtoken.split(" ")[1]  #jwtokenの値は：Bearer tokenとなっている故、spaceでsplitし、tokenのみ取得(Bearer除去)
+    def get_user_info(authorization: str) -> dict:
+        jwt_before_decode = authorization.split(" ")[1]  #jwtokenの値は：Bearer tokenとなっている故、spaceでsplitし、tokenのみ取得(Bearer除去)
         try:
             with open("static/taipei_day_trip_public_key.pem", "r") as file:
                 public_key = file.read()
-            decoded_token = jwt.decode(token, public_key, algorithms=["RS256"])
-            return decoded_token
+            decoded_jwt = jwt.decode(jwt_before_decode, public_key, algorithms=["RS256"])
+            return decoded_jwt
         except jwt.ExpiredSignatureError:  #期限切れの際にcatch
             print("超過有效期限")
         except jwt.InvalidTokenError:  #改ざんされた際にcatch
             print("無效的Token")
+        return None
 
 
     @staticmethod
