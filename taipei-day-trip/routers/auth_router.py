@@ -6,11 +6,13 @@ import typing
 from dependencies import has_jwt_or_null
 from schemas.common_schemas import ResErrorSchema, ResOkSchema
 from schemas.user_schemas import GetAuth200Schema, BaseSignUpSchema, BaseSignInSchema, BaseTokenStrSchema
-from models.user_model import UserModel
-from views.user_view import UserView
+from models.auth_model import UserModel
+from views.auth_view import UserView
 
 
-UserRouter = fastapi.APIRouter(prefix = "/api/user", tags = ["User"])
+
+UserRouter = fastapi.APIRouter(prefix = "/api/user", tags = ["Auth"])
+
 
 
 @UserRouter.post("",
@@ -26,6 +28,7 @@ async def post_user(user: BaseSignUpSchema) -> ResOkSchema:
 	if not tf_response:
 		raise fastapi.HTTPException(status_code = 400, detail = "註冊失敗, 重複的Email或其他原因")
 	return UserView.render_account(tf_response)
+
 
 
 @UserRouter.get("/auth",  # JWTの検証

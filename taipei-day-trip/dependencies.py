@@ -1,12 +1,12 @@
-#依存関係関数で例外が発生した場合、エンドポイント関数は呼び出されない。
+#再利用性が高い場合にDependsを使う。依存関係関数で例外が発生した場合、エンドポイント関数は呼び出されない。
 
 # Standard Lib
 import fastapi
 
 #Local Lib
 from schemas.user_schemas import GetAuth200Schema
-from models.user_model import UserModel
-from views.user_view import UserView
+from models.auth_model import UserModel
+from views.auth_view import UserView
 
 
 

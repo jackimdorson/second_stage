@@ -13,11 +13,9 @@ dotenv.load_dotenv()  #dotenvより後、全環境変数の読み込み
 import config.log_config #特になし
 import config.db_config #log_configより後
 import handlers.exception_handlers as myexception #log_configより後
-from controllers.mrt_contr import MrtRouter
-from controllers.attraction_contr import AttractionRouter
-from controllers.user_contr import UserRouter
-from controllers.booking_contr import BookingRouter
-from controllers.order_contr import OrderRouter
+from routers.content_router import AttractionRouter, MrtRouter
+from routers.auth_router import UserRouter
+from routers.shopping_router import BookingRouter, OrderRouter
 from config.tappay_config import get_tappay_config
 
 
@@ -26,19 +24,17 @@ app = fastapi.FastAPI(
 	description = "台北一日遊網站 API 規格：網站後端程式必須支援這個 API 的規格，網站前端則根據 API 和後端互動。",
 	version = "1.0.0",
 	openapi_tags = [        #記述した順番通りにswaggerUiのtagsが表示される
-		{"name": "User"},   #小文字、大文字はendポイントのtasの命名と一致させる必要あり。
-		{"name": "Attraction"},
-		{"name": "MRT Station"},
-		{"name": "Booking"}
+		{"name": "Content"},   #小文字、大文字はendポイントのtasの命名と一致させる必要あり。
+		{"name": "Shopping"},
+		{"name": "Auth"},
+		{"name": "Config"}
 	]
 )
 
+routers = [AttractionRouter, MrtRouter, UserRouter, BookingRouter, OrderRouter]
+for router in routers:
+	app.include_router(router)
 
-app.include_router(AttractionRouter)
-app.include_router(MrtRouter)
-app.include_router(UserRouter)
-app.include_router(BookingRouter)
-app.include_router(OrderRouter)
 
 app.mount("/static", fastapi.staticfiles.StaticFiles(directory="static"), name="static")
 
@@ -64,6 +60,6 @@ async def thankyou(request: Request):
 # Static Pages (Never Modify Code in this Block)
 
 
-@app.get("/api/tappay-config")
+@app.get("/api/tappay-config", tags = ["Config"])
 async def tappay_config():
 	return get_tappay_config()
